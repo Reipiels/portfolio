@@ -20,6 +20,7 @@
 			</button>
 		</div>
 		
+		
 		<div class="sidebar-content">
 			<h1>PORTFOLIO<br><span style="font-size:12px; font-weight:400; color:#fff; opacity:0.6; ">v26_01</span><br><span style="font-size:12px; font-weight:400; color:#fff; opacity:0.6;">Business Architect PM 정일우</span></h1>
 			
@@ -41,6 +42,9 @@
 			<div class="nav-item" onclick="goToSlide(8)">V. 성장 중심 리더십</div>
 			<div class="nav-item" onclick="goToSlide(9)">VI. 도메인 확장 역량</div>
 			<div class="nav-item" onclick="goToSlide(10)">VII. 프로젝트 아카이브</div>
+		</div>
+		<div class="nav-item print-btn" onclick="window.print()" style="margin-top: 20px; color: var(--accent-color);">
+			<i class="fa-solid fa-file-pdf"></i> 인쇄
 		</div>
 	</nav>
     <main class="main-container">
@@ -88,8 +92,8 @@
             </div>
 
             <div class="section-block">
-                <h3 class="section-title">3-Step Working Model</h3>
-                <p class="section-desc">도메인이 달라져도 변하지 않는 설계 접근법입니다.</p>
+                <h3 class="section-title">3-Step Working Model<span class="section-desc">도메인이 달라져도 변하지 않는 설계 접근법입니다.</span></h3>
+                
                 <div class="process-box">
                     <div class="step">
                         <h4>1. 문제 정의</h4>
@@ -107,8 +111,7 @@
             </div>
 
             <div class="section-block">
-                <h3 class="section-title">Domain Coverage</h3>
-                <p class="section-desc">다양한 산업 환경에서 검증된 설계 역량의 범위입니다.</p>
+                <h3 class="section-title">Domain Coverage<span class="section-desc">다양한 산업 환경에서 검증된 설계 역량의 범위입니다.</span></h3>                
                 <div class="domain-grid">
                     <div class="domain-card" style="border-left-color: #3498db;">
                         <span class="domain-header">에듀테크 (Edutech)</span>
@@ -127,10 +130,6 @@
                         <span class="domain-desc">B2B2C 복합 결제 엔진, 인프라 통합 및 현대화(Modernization)</span>
                     </div>
                 </div>
-            </div>
-
-            <div class="slide-footer">
-                데이터와 로직으로 기획의 실현 가능성을 증명합니다
             </div>
         </div>
 
@@ -924,12 +923,7 @@
 				</table>
 			</div>
 
-			<div class="comp-summary">
-				"핵심은 단순한 도메인 지식이 아니라, 어떤 산업 환경에서도 <strong>'구조화된 설계 패턴'</strong>을 즉각적으로 적용하여 실현하는 능력입니다."
-			</div>
-
 			<div class="domain-bottom">
-				
 				<div class="core-comp-box">
 					<h3 class="core-section-title">도메인을 관통하는 핵심 역량</h3>
 					
@@ -1044,6 +1038,15 @@
     <span class="modal-close">&times;</span>
     <img class="modal-content" id="modalImg">
 </div>
+<div class="floating-nav" id="floatingNav">
+    <button id="prevBtn" class="float-btn" title="이전 슬라이드">
+        <i class="fa-solid fa-chevron-up"></i>
+    </button>
+    <button id="nextBtn" class="float-btn" title="다음 슬라이드">
+        <i class="fa-solid fa-chevron-down"></i>
+    </button>
+</div>
+
 <script>
     /* --- 1. 변수 선언 및 초기화 --- */
     let currentSlide = 0; 
@@ -1057,11 +1060,42 @@
     // 모달 관련
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImg');
+	
+	const prevBtn = document.getElementById('prevBtn');
+	const nextBtn = document.getElementById('nextBtn');	
 
     /* --- 2. 슬라이드 제어 로직 --- */
+	function updateFloatButtons() {
+		if (!prevBtn || !nextBtn) return;
+
+		// 첫 페이지면 이전 버튼 숨김
+		prevBtn.style.visibility = (currentSlide === 0) ? 'hidden' : 'visible';
+		prevBtn.style.opacity = (currentSlide === 0) ? '0' : '1';
+
+		// 마지막 페이지면 다음 버튼 숨김
+		nextBtn.style.visibility = (currentSlide === slides.length - 1) ? 'hidden' : 'visible';
+		nextBtn.style.opacity = (currentSlide === slides.length - 1) ? '0' : '1';
+	}
+
+	// 버튼 클릭 이벤트
+	prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+	nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+	// 초기 로드 시 버튼 상태 확인
+	updateFloatButtons();
+
+
     function goToSlide(index) {
         if (index < 0 || index >= slides.length) return;
-        currentSlide = index;
+		// 모바일일 경우 스크롤 이동 처리		
+		if (window.innerWidth <= 768) {
+			slides[index].scrollIntoView({ behavior: 'smooth' });
+			currentSlide = index;
+
+			return;
+		}		
+        currentSlide = index;	
+		updateFloatButtons();
 
         // 슬라이드 활성화
         slides.forEach((slide, idx) => {
@@ -1079,6 +1113,7 @@
             document.body.classList.remove('menu-open');
         }
     }
+
 
     /* --- 3. 사이드바 통합 토글 로직 --- */
     const handleToggle = () => {
@@ -1123,6 +1158,7 @@
     let startY = 0;
     mainContainer.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
     mainContainer.addEventListener('touchend', e => {
+		if (window.innerWidth <= 768) return;
         const endY = e.changedTouches[0].clientY;
         if (Math.abs(startY - endY) > 50) {
             if (startY > endY) goToSlide(currentSlide + 1);
