@@ -288,8 +288,24 @@ body.collapsed .sidebar-header {
 .system-row .img-container { flex: 1; background: #f9f9f9; border: 1px solid var(--border-color); border-radius: 8px; }
 .system-row .evidence-img { object-fit: contain; }
 
-/* V. 성장 중심 리더십 */
+/* IV-3. ITSM : 5열 그리드 */
 .leadership-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; height: 100%; margin-bottom: 20px; align-items: stretch; }
+.itsm-grid{grid-template-columns: repeat(5, 1fr);}
+.pav-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 3px;
+    color: #fff;
+    letter-spacing: 0.3px;
+}
+.pav-p { background: #c0392b; }
+.pav-a { background: #d35400; }
+.pav-v { background: #27ae60; }
+
+/* V. 성장 중심 리더십 */
+
 .lead-card { background: var(--white); border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 25px; display: flex; flex-direction: column; border-top: 5px solid #dddddd; transition: transform 0.2s; }
 .lead-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
 .lead-card.org { border-top-color: var(--primary-color); }
@@ -525,7 +541,8 @@ body.collapsed .sidebar-header {
 	.sys-item {line-height:1.2;}
 	.domain-table tr, .archive-table tr {
 		page-break-inside: avoid !important;
-	}		
+	}
+	.lead-card { padding: 15px; }
     /* 5. 프로젝트 아카이브 테이블 전체 출력 */
     .archive-table-wrap {
         overflow: visible !important;
