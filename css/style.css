@@ -452,9 +452,11 @@ body.collapsed .sidebar-header {
 
     .system-row { flex-direction: column; height: auto; gap: 10px; }
     .system-row .system-card { flex: 1; }
-    .system-row .img-container { height: 220px; width: 100%; }
-    .col-industry { width: 100%; margin-bottom: 5px; }
+    .system-row .img-container { height: 220px; width: 100%; }	
     
+	.filter-group{gap:10px;}
+	.filter-label{display: none;}	
+
     /* 5. 타임라인 모바일 최적화 */
 	
     .timeline-container { flex-direction: column; gap: 40px; margin-top: 10px; }
@@ -473,6 +475,36 @@ body.collapsed .sidebar-header {
         margin: 5px 0; 
     }
     .footer-item:last-child::after { content: ''; }
+	/* 7. appendix 카드형 변환 */
+	.archive-table thead { display: none; }
+	.archive-table,
+	.archive-table tbody,
+	.archive-table tr,
+	.archive-table td { display: block; width: 100%; box-sizing: border-box; }
+
+	.archive-table tr {
+		margin-bottom: 12px;
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		padding: 10px 12px;
+		background: var(--white);
+	}
+	.archive-table td {
+		padding: 4px 0;
+		border: none;
+		display: flex;
+		gap: 8px;
+		font-size: 13px;
+	}
+	.archive-table td::before {
+		content: attr(data-label);
+		font-weight: 700;
+		color: var(--primary-color);
+		min-width: 70px;
+		flex-shrink: 0;
+	}
+	.archive-table td:empty { display: none; }
+	
 }
 
 /* ==========================================================================

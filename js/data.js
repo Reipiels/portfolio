@@ -126,14 +126,14 @@ tableBody.innerHTML = filtered.map(p => {
 
     return `
         <tr>
-            <td class="col-period">${p.period}</td>
-            <td class="col-client">${p.client}</td>
-            <td class="col-title">${p.title}</td>
-            <td class="col-domain"><span class="badge ${badgeClass}">${p.domain}</span></td>
-            <td class="col-role">${p.role}</td>
-            <td class="col-method">${p.method || '-'}</td>
-            <td class="col-env">${p.env || '-'}</td>
-            <td class="col-desc">${p.desc}</td>
+            <td class="col-period" data-label="기간">${p.period}</td>
+            <td class="col-client" data-label="발주처">${p.client}</td>
+            <td class="col-title" data-label="프로젝트명">${p.title}</td>
+            <td class="col-domain" data-label="도메인"><span class="badge ${badgeClass}">${p.domain}</span></td>
+            <td class="col-role" data-label="역할">${p.role}</td>
+            <td class="col-method" data-label="개발방식">${p.method || '-'}</td>
+            <td class="col-env" data-label="개발환경">${p.env || '-'}</td>
+            <td class="col-desc" data-label="주요성과">${p.desc}</td>
         </tr>
     `;
 }).join('');
