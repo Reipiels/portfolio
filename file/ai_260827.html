@@ -1,0 +1,749 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<title>업무수행이력 및 AI 활용역량 기술서</title>
+
+<style>
+  :root{
+    --paper: #ffffff;
+    --paper-alt: #f5f5f3;
+    --ink: #1a1a1a;
+    --ink-muted: #4a4a4a;
+    --ink-faint: #767676;
+    --line: #cfcfcc;
+    --line-strong: #1a1a1a;
+    --accent: #7f1a21;
+    --accent-tint: #f4e9ea;
+    --mono: "Noto Sans Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    --sans: "Noto Sans KR", "Malgun Gothic", sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper: #1b1b1a;
+      --paper-alt: #232322;
+      --ink: #eaeae7;
+      --ink-muted: #b8b8b4;
+      --ink-faint: #8c8c88;
+      --line: #45453f;
+      --line-strong: #eaeae7;
+      --accent: #d98d92;
+      --accent-tint: #362324;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper: #1b1b1a;
+    --paper-alt: #232322;
+    --ink: #eaeae7;
+    --ink-muted: #b8b8b4;
+    --ink-faint: #8c8c88;
+    --line: #45453f;
+    --line-strong: #eaeae7;
+    --accent: #d98d92;
+    --accent-tint: #362324;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.8;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection{ background: var(--accent-tint); color: var(--ink); }
+  a{ color: var(--accent); }
+  code{ font-family: var(--mono); font-size: 0.92em; background: var(--paper-alt); padding: 0 3px; }
+
+  .page{ max-width: 880px; margin: 0 auto; padding: 56px 28px 120px; }
+
+  /* ---------- doc header ---------- */
+  .doc-meta{
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .doc-title{
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+    margin: 0 0 6px;
+    text-align: center;
+  }
+  .doc-sub{
+    font-size: 13.5px;
+    color: var(--ink-muted);
+    margin: 0 0 24px;
+    text-align: center;
+  }
+  hr.thick{ border: none; border-top: 3px solid var(--line-strong); margin: 0 0 24px; }
+  hr.thin{ border: none; border-top: 1px solid var(--line); margin: 44px 0; }
+
+  .who-line{
+    margin-top: 4px;
+    font-size: 13.5px;
+    color: var(--ink-faint);
+    text-align: center;
+  }
+  .who-line b{ color: var(--ink); font-weight: 700; }
+
+  /* ---------- summary table ---------- */
+  table.summary{ width: 100%; border-collapse: collapse; margin: 26px 0 0; font-size: 14px; }
+  table.summary th, table.summary td{
+    text-align: left;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.summary th{
+    background: var(--paper-alt);
+    font-weight: 700;
+    width: 20%;
+    white-space: nowrap;
+  }
+
+  /* ---------- TOC ---------- */
+  .toc{ margin: 28px 0 0; font-size: 14px; }
+  .toc-title{ font-weight: 700; margin-bottom: 8px; }
+  .toc ol{ margin: 0; padding-left: 22px; }
+  .toc li{ margin-bottom: 3px; }
+  .toc a{ color: var(--ink); text-decoration: none; }
+  .toc a:hover{ text-decoration: underline; }
+
+  /* ---------- sections ---------- */
+  h2.sec{
+    font-size: 18px;
+    font-weight: 900;
+    margin: 0 0 6px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--line-strong);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  h2.sec .no{ color: var(--accent); font-family: var(--mono); }
+  p.sec-intro{ color: var(--ink-muted); font-size: 13.5px; margin: 10px 0 20px; }
+
+  h3.item{
+    font-size: 15px;
+    font-weight: 700;
+    margin: 24px 0 6px;
+  }
+  h3.item:first-of-type{ margin-top: 16px; }
+  h3.item .no{ color: var(--accent); font-family: var(--mono); margin-right: 6px; }
+  p.body-p{ margin: 0 0 4px; color: var(--ink-muted); font-size: 14px; }
+  ul.dash{ margin: 4px 0 0; padding-left: 4px; list-style: none; font-size: 14px; color: var(--ink-muted); }
+  ul.dash li{ margin-bottom: 5px; padding-left: 14px; position: relative; }
+  ul.dash li::before{ content: "‐"; position: absolute; left: 0; color: var(--ink-faint); }
+  ul.dash li b{ color: var(--ink); font-weight: 700; }
+
+  .note-box{
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+    background: var(--paper-alt);
+    border-left: 3px solid var(--accent);
+    padding: 8px 12px;
+    line-height: 1.6;
+  }
+
+  table.role{ width: 100%; border-collapse: collapse; margin: 10px 0 4px; font-size: 13.5px; }
+  table.role th, table.role td{ border: 1px solid var(--line); padding: 6px 10px; text-align: left; }
+  table.role th{ background: var(--paper-alt); font-size: 12px; text-align: center;}
+  table.role td.tool{ font-family: var(--mono); font-weight: 700; }
+
+  /* ---------- doc list (governance) ---------- */
+  h3.doc{
+    font-size: 15px;
+    font-weight: 700;
+    margin: 24px 0 4px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  h3.doc .date{ font-family: var(--mono); font-size: 12px; color: var(--ink-faint); font-weight: 400; }
+  h3.doc:first-of-type{ margin-top: 16px; }
+
+  /* ---------- project record table ---------- */
+  .prj{ margin: 30px 0; }
+  h3.prj-title{
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  h3.prj-title .no{ color: var(--accent); font-family: var(--mono); }
+  h3.prj-title .commits{ font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); font-weight: 400; }
+  table.record{ width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  table.record th, table.record td{
+    border: 1px solid var(--line);
+    padding: 7px 11px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.record th{
+    background: var(--paper-alt);
+    font-weight: 700;
+    width: 110px;
+    white-space: nowrap;
+  }
+  table.record td{ color: var(--ink-muted); }
+  table.record td.date-cell{ font-family: var(--mono); font-size: 12.5px; }
+
+  /* ---------- issue list ---------- */
+  h4.proj{
+    font-size: 14.5px;
+    font-weight: 700;
+    margin: 24px 0 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  h4.proj:first-of-type{ margin-top: 16px; }
+  h4.proj .kr{ font-weight: 400; color: var(--ink-faint); font-size: 13px; }
+  p.proj-note{ font-size: 12.5px; color: var(--ink-faint); margin: 6px 0 8px; }
+  ol.issues{ margin: 8px 0 0; padding-left: 22px; font-size: 13.5px; color: var(--ink-muted); }
+  ol.issues li{ margin-bottom: 8px; line-height: 1.75; }
+  ol.issues li b{ color: var(--ink); font-weight: 700; }
+
+  .closing p{ color: var(--ink-muted); font-size: 14px; max-width: 66ch; }
+  .sign{ margin-top: 20px; font-family: var(--mono); font-size: 13px; color: var(--ink-faint); }
+
+  .scrollx{ overflow-x: auto; }
+
+  @media (max-width: 600px){
+    .page{ padding: 36px 16px 90px; }
+    .doc-title{ font-size: 20px; }
+    table.summary th{ width: 36%; }
+    table.record th{ width: 88px; white-space: normal; }
+  }
+</style>
+
+<div class="page">
+
+  <div class="doc-meta">
+    <span>작성기준일 2026-08-27</span>
+  </div>
+  <h1 class="doc-title">업무수행이력 및 AI 활용역량 기술서</h1>
+  <p class="doc-sub">AI 협업 기반 개발 업무 수행 이력 · 사내 AI 거버넌스 수립 실적 · 주요 문제해결 사례</p>
+  <p class="who-line"><b>정일우</b>   </p>
+  <hr class="thick">
+
+  <table class="summary">
+    <tr><th>수행 업무</th><td>20건 이상 (서버 인프라 구축, 웹 서비스 개발, 업무 자동화, AI 서비스 구현 전 영역)</td></tr>
+    <tr><th>표준 템플릿 확장</th><td>사내 표준 템플릿(기본솔루션) 1종 설계 → 파생 시스템 5종 구현</td></tr>
+    <tr><th>AI 거버넌스 수립</th><td>문서 4종 직접 저작 (IT팀 업무정의 · 전사 활용 가이드라인 · 모델 선택기준 · Claude Code 운영지침)</td></tr>
+    <tr><th>누적 커밋</th><td>488건 (주요 프로젝트 7건 합산 기준)</td></tr>
+    <tr><th>문제해결 사례</th><td>40건 이상 기록 (사내 PC 코인 채굴 악성코드 탐지·제거 대응 포함, 제5장 참조)</td></tr>
+  </table>
+
+  <div class="toc">
+    <div class="toc-title">목 차</div>
+    <ol>
+      <li><a href="#s1">AI 협업 수행 체계</a></li>
+      <li><a href="#s2">사내 AI 거버넌스 문서 저작 실적</a></li>
+      <li><a href="#s3">AI 활용 프로젝트 수행 이력</a></li>
+      <li><a href="#s4">개인 프로젝트 수행 이력</a></li>
+      <li><a href="#s5">주요 문제해결 사례</a></li>
+    </ol>
+  </div>
+
+  <hr class="thin" id="s1">
+
+  <h2 class="sec"><span class="no">1.</span>AI 협업 수행 체계</h2>
+  <p class="sec-intro">개별 프로젝트 수행에 앞서, AI 도구의 운용 방식과 협업 규칙을 다음과 같이 수립·적용하였음.</p>
+
+  <h3 class="item"><span class="no">1.1</span>작업 성격별 AI 도구 분담 운용</h3>
+  <ul class="dash">
+    <li>기획·1차 설계는 Claude(웹), 교차 검증은 GPT·Gemini, 코드 구현·서버 작업은 Claude Code로 분담 운용함</li>
+    <li>동일 질의를 복수 AI에 교차 투입하여 답변이 갈리는 지점을 검증 대상으로 식별함</li>
+    <li>정적 HTML 퍼블리싱 등 단순 작업에는 고비용 도구를 투입하지 않는 선택 기준을 적용함</li>
+  </ul>
+  <table class="role">
+    <tr><th>단계</th><th>도구</th></tr>
+    <tr><td>기획 · 1차 설계</td><td class="tool">Claude (웹)</td></tr>
+    <tr><td>교차 검증</td><td class="tool">GPT · Gemini</td></tr>
+    <tr><td>코드 구현 · 서버 작업</td><td class="tool">Claude Code</td></tr>
+    <tr><td>정적 HTML 퍼블리싱</td><td class="tool">Claude (웹)</td></tr>
+  </table>
+
+  <h3 class="item"><span class="no">1.2</span>프로젝트별 AI 온보딩 문서(CLAUDE.md) 운영</h3>
+  <ul class="dash">
+    <li>패키지 구조, 에러 처리 패턴, 커밋 컨벤션, DB 네이밍 규칙을 프로젝트별 문서로 명문화함</li>
+    <li>신규 AI 세션 시작 시 해당 문서를 우선 참조하도록 하여, 세션 교체와 무관하게 일관된 작업 기준을 유지함</li>
+  </ul>
+
+  <h3 class="item"><span class="no">1.3</span>동시 세션 간 작업 경계 및 문서 소유권 분리</h3>
+  <ul class="dash">
+    <li>모사방지솔루션 개발 시 알고리즘 담당(엔진 세션)과 화면·인프라 담당(서비스 세션)을 분리 운영함</li>
+    <li>코드 경로별 소유권을 표로 정리하고, 일괄 커밋(<code>git add -A</code>)을 금지하는 대신 경로 지정 부분 커밋만 허용하는 규칙을 수립함</li>
+  </ul>
+
+  <h3 class="item"><span class="no">1.4</span>공유 문서 유실 사고 및 재발방지 절차 수립</h3>
+  <ul class="dash">
+    <li>두 세션이 공동 편집하는 의사결정 기록 문서에서 문단이 유실되는 사고가 발생, git 이력으로 원인을 추적함</li>
+    <li>"표는 추가만 한다(기존 결정은 신규 항목으로 대체)", "편집 직전 파일 재확인", "커밋 후 삭제 라인 diff 직접 확인"의 3원칙을 수립하였고 이후 재발 없음</li>
+  </ul>  
+
+  <h3 class="item"><span class="no">1.5</span>자동화 적용 범위에 대한 판단 기준 적용</h3>
+  <ul class="dash">
+    <li>자동 댓글 등록기능 개발 시, 네이버 공감/댓글 자동 클릭이 표면상 성공으로 처리되나 실제 상태는 변경되지 않음을 실측으로 확인함</li>
+    <li>우회 시도를 지속하는 대신, 국내 매크로 클릭 관련 형사 판례(형법 제314조)를 검토한 후 "AI 초안 생성 + 담당자 최종 승인·게시" 구조로 설계를 변경함</li>
+    <li>동일 요청이 재차 접수될 경우 해당 리스크를 우선 고지하도록 프로젝트 문서에 지침으로 명기함</li>
+  </ul>
+
+  <h3 class="item"><span class="no">1.6</span>자동화 도구 개발 중단 결정 사례</h3>
+  <ul class="dash">
+    <li>복수 사내 서버의 SSL 인증서 갱신 봇 개발에 착수하였으나, 갱신 시마다 AI에 직접 작업을 지시하는 방식이 도구 개발·유지보수 대비 효율적임을 확인함</li>
+    <li>이에 따라 봇 개발을 중단하고 AI 직접 수행 방식으로 운영 방침을 확정함 — 자동화 도구화 여부 자체를 비용 대비 효과로 판단한 사례</li>
+  </ul>
+
+  <h3 class="item"><span class="no">1.7</span>레거시 코드베이스 대상 AI 작업 규칙 체계(AGENTS.md) 설계</h3>
+  <ul class="dash">
+    <li>Java 7·Spring 3.1.1·ES5 기반 레거시 시스템(uniwiseWeb, uniwiseWebAdmin)은 AI가 최신 문법으로 코드를 생성할 경우 빌드가 실패하는 제약이 있음</li>
+    <li>루트 문서에 불변 제약(Java 8+ 문법 금지, ES6+ 문법 금지 등)을 명기하고, 하위 모듈(java/myBatis/views)별 세부 규칙 문서로 위임하는 "중앙 통제 + 위임" 구조를 설계·적용함</li>
+    <li>실제 운영 장애(로컬 WAS 기동 중 빌드 정리 명령 실행으로 사이트 전체 404 발생)를 계기로 위험 명령의 사전 확인 규칙을 추가함</li>
+    <li>10년간 운영 중인 핵심 매출 로직은 AI의 개선 제안과 무관하게 수정 금지 영역으로 명시함</li>
+  </ul>
+
+  <h3 class="item"><span class="no">1.8</span>반복 장애 원인의 단계적 규명</h3>
+  <ul class="dash">
+    <li>Windows 빌드 반복 실패 문제를 4개 프로젝트(uniai·unimosa·uninsight·curvefit)에서 각각 접함</li>
+    <li>1차 추정(동시 세션 충돌) → 실패 패턴 관찰로 기각 → 2차 규명(폴더 읽기전용 속성) → 3차 규명(해당 속성을 부여한 주체가 Google Drive 백업 동기화임을 확정)의 순서로 원인을 단계적으로 좁힘</li>
+  </ul>
+
+  <h3 class="item"><span class="no">1.9</span>수행 과정에서 정립한 운영 원칙</h3>
+  <ul class="dash">
+    <li>수립한 가설은 실측으로 재검증하고, 반증 시 철회 사실과 사유를 문서에 남김</li>
+    <li>AI가 처리하기 편한 방식과 실무자가 사용하기 편한 방식이 다를 경우 후자를 채택함</li>
+    <li>법적·정책 리스크는 사전 조사 후 문서화하여 후속 판단의 제약 조건으로 명기함</li>
+    <li>완전 자동화와 완전 수동의 양자택일 대신, 양측을 실제 구현·비교한 후 절충안을 채택함</li>
+    <li>원인 미확정 시 "미확정"으로 기재하고, 차후 확정이 가능하도록 진단 체계(로깅·모니터링)를 우선 구축함</li>
+  </ul>
+
+  <hr class="thin" id="s2">
+
+  <h2 class="sec"><span class="no">2.</span>사내 AI 거버넌스 문서 저작 실적</h2>
+  <p class="sec-intro">개인 활용을 넘어, 조직 단위의 AI 활용 기준을 아래 4종 문서로 직접 수립하였음.</p>
+
+  <h3 class="doc">AI교육연구소(IT팀) 2026년 업무 정의 <span class="date">2026-08-20</span></h3>
+  <ul class="dash">
+    <li>IT팀의 운영목표·업무분장·채용계획·역할별 학습항목을 AI 협업 중심으로 재설계한 조직 운영 문서</li>
+    <li>4대 운영목표에 "AI 협업 개발체계 확립"을 포함하고, "AI 거버넌스(Claude Code 운영, 사용기준·비용관리)"를 팀장 소관 정식 업무로 업무분장표에 명기함</li>
+    <li>역할별 학습항목에 Claude Code 고급 운영(skills·hooks·headless·서브에이전트), 요구사항의 동작 목업(Claude Artifacts) 제작, "AI 출력을 검증 대상으로 취급(생성자가 곧바로 승인하지 않음)" 등을 구체 정의함</li>
+    <li>API/LLM 연동·내부시스템 신규 구현을 "팀장+AI" 공동 수행 체계로 명시하여, AI를 개인 역량이 아닌 팀 표준 작업 방식으로 편성함</li>
+  </ul>
+
+  <h3 class="doc">전사 AI 활용 가이드라인 <span class="date">v0.1 · 2026-07-12</span></h3>
+  <ul class="dash">
+    <li>업무 난이도에 따른 3단계 활용 기준(무료 AI → 공용 AI → 전문 라이선스) 및 서비스별 권장 업무 매핑표 수립</li>
+    <li>개인정보·API 키 등 AI 입력 금지 정보 목록과 대체 수단(익명화 데이터·샘플 코드 등)을 규정함</li>
+  </ul>
+
+  <h3 class="doc">클로드 모델별 사용가이드 <span class="date">2026-07-10</span></h3>
+  <ul class="dash">
+    <li>작업 성격(문법 확인/문서 작성/화면 설계/DB 설계/장애 원인추적 등)별 모델(Haiku·Sonnet·Opus) 및 사고모드 on/off 선택 기준표 수립</li>
+    <li>정답이 정해진 질의에는 사고모드를 배제하고, 가설·추론이 필요한 설계·원인분석에만 적용하여 비용과 품질을 동시 관리함</li>
+  </ul>
+
+  <h3 class="doc">클로드 코드 운영 지침 (사내 교육자료) <span class="date">2026-08-06</span></h3>
+  <ul class="dash">
+    <li>업무 분리(세션당 목적 1건) · 인수인계 문서 관리(간결·상시 갱신) · 세션 관리(진행상황 파일화 후 초기화) · 안전수칙(비가역 작업 사전 확인) · 검수(완료 보고의 독립 검증) 5개 조항으로 구성</li>
+    <li>실제 발생·보고된 사고 사례(컨텍스트 압축으로 인한 작업 유실, 원본 파일 삭제 등)를 조항별 근거로 첨부함</li>
+  </ul>
+
+  <hr class="thin" id="s3">
+
+  <h2 class="sec"><span class="no">3.</span>AI 활용 프로젝트 수행 이력</h2>
+  <p class="sec-intro">작성된 내용 이외에도 다양한 소규모 시스템/기능을 기획/구현하여 내부 사용자들에게 배포</p>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.1</span>월간업무진행현황 시스템 구현</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">~ 2025-09</td></tr>
+      <tr><th>사이트 URL</th><td>비공개</td></tr>
+      <tr><th>프로젝트 소개</th><td>팀 업무 진행 현황을 실시간 조회하는 웹 시스템</td></tr>
+      <tr><th>착수 배경</th><td>각 팀별로 제각각 다른 양식(excel/ppt)으로 서면보고하는 방식을 개선하기 위함</td></tr>
+      <tr><th>투입 포지션</th><td>기획 · 화면정의 · 개발 전담 (Gemini 협업)</td></tr>
+      <tr><th>개발 환경</th><td>Google Sheets API · Google 로그인 API · JavaScript</td></tr>
+      <tr><th>현재 상황</th><td>운영중-추후 전사그룹웨어 통합예정</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.2</span>대표 홈페이지 구축</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">~ 2025-10</td></tr>
+      <tr><th>사이트 URL</th><td><a href="https://corp.uniwise.co.kr" target="_blank" rel="noopener">https://corp.uniwise.co.kr</a></td></tr>
+      <tr><th>프로젝트 소개</th><td>회사 대표 홈페이지</td></tr>
+      <tr><th>착수 배경</th><td>외주 없이 내부 자원으로 신속 구축 필요</td></tr>
+      <tr><th>투입 포지션</th><td>기획 · 화면설계(PPTX) · HTML 프로토타입 구현(Gemini 협업)</td></tr>
+      <tr><th>개발 환경</th><td>html/css/javascript</td></tr>
+      <tr><th>현재 상황</th><td>운영중</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.3</span>서버 인프라 분리 및 보안 강화</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-05-18 ~ 2026-05-20</td></tr>
+      <tr><th>사이트 URL</th><td><a href="https://www.uniwise.co.kr" target="_blank" rel="noopener">https://www.uniwise.co.kr</a></td></tr>
+      <tr><th>프로젝트 소개</th><td>Apache-Tomcat 분리, 정적/동적 콘텐츠 서빙 경로 정의, 서버 보안 강화</td></tr>
+      <tr><th>착수 배경</th><td>정적/동적 콘텐츠가 혼재된 서버 구조의 정리 및 보안 수준 제고 필요</td></tr>
+      <tr><th>투입 포지션</th><td>인프라 설계 · 작업 전담 (AI 가이드 참조, 서버 명령 직접 수행)</td></tr>
+      <tr><th>개발 환경</th><td>Apache · Tomcat</td></tr>
+      <tr><th>현재 상황</th><td>운영중</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.4</span>GitLab 설치 (사내 형상관리 인프라 구축)</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">~ 2026-06-04</td></tr>
+      <tr><th>사이트 URL</th><td>비공개</td></tr>
+      <tr><th>프로젝트 소개</th><td>사내 소스 형상관리 시스템(GitLab CE) 구축</td></tr>
+      <tr><th>착수 배경</th><td>사내 형상관리 인프라 부재</td></tr>
+      <tr><th>투입 포지션</th><td>구축 전담(AI 가이드 참조, 서버 명령 직접 수행)</td></tr>
+      <tr><th>개발 환경</th><td>GitLab CE</td></tr>
+      <tr><th>현재 상황</th><td>전사 개발 저장소로 운영 중</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.5</span>통계 통합 대시보드 1차 구현<span class="commits">15 commits</span></h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">~ 2026-06-10</td></tr>
+      <tr><th>사이트 URL</th><td>비공개</td></tr>
+      <tr><th>프로젝트 소개</th><td>운영 지표 통합 조회 대시보드 (1차)</td></tr>
+      <tr><th>착수 배경</th><td>JSON 파일 저장 방식의 동시성·조회 성능 한계 해소 필요</td></tr>
+      <tr><th>투입 포지션</th><td>기획 · DB 설계 · 개발 전담</td></tr>
+      <tr><th>개발 환경</th><td>JSON 저장 방식 → DB 생성·저장 방식 전환</td></tr>
+      <tr><th>현재 상황</th><td>2차(유니인사이트, 3.12)로 재구현 완료</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.6</span>커브핏(curvefit) 프론트 퍼블리싱</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-06-09 ~ 2026-06-17</td></tr>
+      <tr><th>사이트 URL</th><td><a href="https://corp.uniwise.co.kr/curvefit/member/login.html" target="_blank" rel="noopener">https://corp.uniwise.co.kr/curvefit/member/login.html</a></td></tr>
+      <tr><th>프로젝트 소개</th><td>AI 자세분석 홈트레이닝 서비스의 프론트 화면 퍼블리싱</td></tr>
+      <tr><th>착수 배경</th><td>화면이 장기간 목업(하드코딩) 상태로 서버 연동 이력이 없어, 실서비스화를 위한 화면 정비 필요</td></tr>
+      <tr><th>투입 포지션</th><td>화면정의(PPT 직접 작성) · 구현 감독 (HTML/스크립트는 AI 제작)</td></tr>
+      <tr><th>개발 환경</th><td>Spring Boot · Thymeleaf</td></tr>
+      <tr><th>현재 상황</th><td>개발 진행중</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.7</span>GitLab 이슈보드 운영시스템 설정</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">~2026-06-18</td></tr>
+      <tr><th>사이트 URL</th><td>비공개</td></tr>
+      <tr><th>프로젝트 소개</th><td>내부 시스템 운영 대응(요청·오류 접수)의 이슈보드 기반 시스템화</td></tr>
+      <tr><th>착수 배경</th><td>운영부서 요청·장애 접수가 비정형 채널(구두·메신저)로 분산되어 이력 관리 불가</td></tr>
+      <tr><th>투입 포지션</th><td>프로세스 설계 · 환경설정 전담(AI 가이드 참조, 서버 명령 직접 수행)</td></tr>
+      <tr><th>개발 환경</th><td>GitLab 이슈보드</td></tr>
+      <tr><th>현재 상황</th><td>내부 시스템 운영 접수 채널로 운영 중</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.8</span>CDMS 콘텐츠저작도구(aimaker) 1차 구현<span class="commits">29 commits</span></h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-06-24 ~ 2026-07-06</td></tr>
+      <tr><th>사이트 URL</th><td>비공개</td></tr>
+      <tr><th>프로젝트 소개</th><td>강의자료(PDF 등) 업로드 시 AI가 교안 슬라이드를 자동 생성하는 서비스</td></tr>
+      <tr><th>착수 배경</th><td>기존 JSP 기반 콘텐츠 저작 방식의 수작업 부담을 AI 기반 생성으로 대체</td></tr>
+      <tr><th>투입 포지션</th><td>기획 · 화면/로직정의 · 개발 (AI 협업)</td></tr>
+      <tr><th>개발 환경</th><td>Python · FastAPI · PyMuPDF · Claude/GPT/Gemini 선택 연동</td></tr>
+      <tr><th>현재 상황</th><td>본 시스템(lecturemaker-web) 흡수 완료(2026-08 운영 배포), 기능 보강 지속</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.9</span>기본솔루션(사내 표준 템플릿) 구현<span class="commits">38 commits</span></h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-07-02 ~ 2026-07-06</td></tr>
+      <tr><th>사이트 URL</th><td>비공개</td></tr>
+      <tr><th>프로젝트 소개</th><td>어드민 웹 + 모바일 웹을 단일 Spring Boot 앱에서 서빙하는 사내 표준 템플릿. 인증·메뉴·권한·게시판·코드관리 등 공통 기능 내장</td></tr>
+      <tr><th>착수 배경</th><td>신규 프로젝트마다 어드민/모바일 웹 골격을 반복 구축하는 비효율 제거</td></tr>
+      <tr><th>투입 포지션</th><td>설계 · 개발 전담 (AI 협업)</td></tr>
+      <tr><th>개발 환경</th><td>Java 21 · Spring Boot 4 · MyBatis · Flyway · MariaDB · Thymeleaf</td></tr>
+      <tr><th>현재 상황</th><td>유니인사이트·유니AI·통합CDMS·모사방지솔루션 등 파생 5종의 공통 기반으로 활용 중</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.10</span>GitLab 이슈보드 모니터링 시스템 구현</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-07-21</td></tr>
+      <tr><th>사이트 URL</th><td>비공개</td></tr>
+      <tr><th>프로젝트 소개</th><td>GitLab API로 이슈·댓글·첨부파일을 조회하는 모니터링 시스템</td></tr>
+      <tr><th>착수 배경</th><td>운영부서 요청사항을 스크린샷 전달 방식 대신 API로 직접 조회·분석할 필요</td></tr>
+      <tr><th>투입 포지션</th><td>화면정의 · 개발 (AI 협업)</td></tr>
+      <tr><th>개발 환경</th><td>GitLab API</td></tr>
+      <tr><th>현재 상황</th><td></td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.11</span>유니와이즈 모바일웹 재구현</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-06-24 ~ 2026-07-23</td></tr>
+      <tr><th>사이트 URL</th><td>비공개</td></tr>
+      <tr><th>프로젝트 소개</th><td>대표 서비스 모바일웹 전면 재구현 (결제모듈 교체 포함)</td></tr>
+      <tr><th>착수 배경</th><td>디자인 개편 및 결제모듈 교체 필요</td></tr>
+      <tr><th>투입 포지션</th><td>실행계획 수립 · 구현범위 정의 · 구현 (디자인/HTML은 타부서 요청)</td></tr>
+      <tr><th>개발 환경</th><td>JSP · 결제모듈(PG) 연동</td></tr>
+      <tr><th>현재 상황</th><td>운영개발자 이관 - 테스트/검증중</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.12</span>통계 통합 대시보드(유니인사이트) 2차 구현<span class="commits">84 commits</span></h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-07-24 ~ 2026-08-06</td></tr>
+      <tr><th>사이트 URL</th><td>비공개</td></tr>
+      <tr><th>프로젝트 소개</th><td>매출·광고·회원·상담·문의·공시분석 등 운영 지표를 통합한 경영 의사결정 지원 플랫폼</td></tr>
+      <tr><th>착수 배경</th><td>매출·광고 대시보드(Python)와 학습자 통계(레거시 JSP)가 분리 운영되고, 비용·상담·채널수익 등은 시스템 부재로 수기 관리되던 상황</td></tr>
+      <tr><th>투입 포지션</th><td>기획 · DB 설계 · 개발 전담 (AI 협업)</td></tr>
+      <tr><th>개발 환경</th><td>기본솔루션 기반 (Spring Boot · MyBatis · Flyway · MariaDB) · Oracle 연동</td></tr>
+      <tr><th>현재 상황</th><td>운영 중. Oracle↔MariaDB 병행 운영 교차검증으로 이관값 검증, 환불액 약 1,300만원 과소계상 발견·정정 (제5장 참조)</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.13</span>로그리포트 구현</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-07-31 ~ 2026-08-03</td></tr>
+      <tr><th>사이트 URL</th><td>없음(PC실행)</td></tr>
+      <tr><th>프로젝트 소개</th><td>인강LMS 서버의 Apache·Tomcat 로그를 매일 새벽 자동 수집·분석하여 결제 오류 최우선의 고정양식 리포트를 이메일 발송하는 시스템</td></tr>
+      <tr><th>착수 배경</th><td>결제 오류·장애를 담당자가 수작업으로 로그를 열람하여 확인하던 방식의 자동화 필요</td></tr>
+      <tr><th>투입 포지션</th><td>기획 · 분석기준 정의 · 개발 전담 (AI 협업)</td></tr>
+      <tr><th>개발 환경</th><td>SSH 키 연동 · LLM API 분석 연동 · Windows 작업스케줄러 · SMTP 메일 발송</td></tr>
+      <tr><th>현재 상황</th><td>일일 자동 발송 운영 중 (약 4주간 누적 54건 발송). 결제 오류 근본원인 특정 등 실적 다수 (제5장 참조)</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.14</span>학점LMS 영상별 AI 질문/답변 기능(uniai) 구현<span class="commits">10 commits</span></h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-08-06 ~ 2026-08-12</td></tr>
+      <tr><th>사이트 URL</th><td>API연동방식</td></tr>
+      <tr><th>프로젝트 소개</th><td>학점LMS 강의 영상별 자막·PDF 교안을 근거로 학습자 질문에 답변하는 AI 챗봇 (임베드 위젯 방식)</td></tr>
+      <tr><th>착수 배경</th><td>기존 인강 챗봇은 Oracle 텍스트 스크립트 기반으로 데이터 구조가 상이하여 재사용 불가 판단, 신규 설계 착수</td></tr>
+      <tr><th>투입 포지션</th><td>기획 · 인증구조 설계 · 개발 전담 (AI 협업)</td></tr>
+      <tr><th>개발 환경</th><td>기본솔루션 기반 (Spring Boot · MariaDB) · Gemini 연동</td></tr>
+      <tr><th>현재 상황</th><td>운영 배포 완료. 서버간 정적 API 키 + 위젯용 단기 세션토큰(6시간)의 2단 인증 구조 적용</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.15</span>CDMS 통합콘텐츠관리시스템 구현<span class="commits">119 commits</span></h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-07-02 ~ 2026-08-21</td></tr>
+      <tr><th>사이트 URL</th><td><a href="https://lecturemaker.uniwise.kr" target="_blank" rel="noopener">https://lecturemaker.uniwise.kr</a></td></tr>
+      <tr><th>프로젝트 소개</th><td>강의 콘텐츠 제작·관리 통합 시스템 (aimaker 연동 포함)</td></tr>
+      <tr><th>착수 배경</th><td>기존 CDMS는 문서·형상관리 이력이 없는 레거시(JSP 218개, 파일명 날짜 부여 방식의 버전관리 흔적 27개 이상)로, 구조 진단 후 기본솔루션 기반 재설계 필요 판단</td></tr>
+      <tr><th>투입 포지션</th><td>레거시 진단 · 로직정의 · 화면방향 수정 · 핵심화면 설계/정의 (AI 협업)</td></tr>
+      <tr><th>개발 환경</th><td>기본솔루션 기반 (Spring Boot) · aimaker(FastAPI) 연동</td></tr>
+      <tr><th>현재 상황</th><td>구현 완료·보강 중. 진단 단계에서 백업파일 무한누적 구조, 템플릿 수정 미반영 함정 등을 사전 식별하여 설계에 반영 (제5장 참조)</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.16</span>모사방지솔루션 구현<span class="commits">193 commits · 의사결정기록(ADR) 38건</span></h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-08-12 ~ 2026-08-24</td></tr>
+      <tr><th>사이트 URL</th><td><a href="https://unimosa.uniwise.kr" target="_blank" rel="noopener">https://unimosa.uniwise.kr</a></td></tr>
+      <tr><th>프로젝트 소개</th><td>과제 제출물의 모사율(표절율)을 정확·재현 가능하게 산정하는 검사 솔루션</td></tr>
+      <tr><th>착수 배경</th><td>기존 시스템의 판정 로직(DB 저장 프로시저)을 직접 분석한 결과, 100자 고정 절단·완전일치 비교, 문서 말미 누락 버그, 짧은 글일수록 표절률이 높아지는 산식 등 구조적 결함을 확인하여 전면 교체 결정</td></tr>
+      <tr><th>투입 포지션</th><td>레거시 진단 · 산정로직 정의 · 화면방향 수정 (엔진/서비스 세션 분리 운영, AI 협업)</td></tr>
+      <tr><th>개발 환경</th><td>기본솔루션 기반 (Spring Boot · MariaDB)</td></tr>
+      <tr><th>현재 상황</th><td>운영팀 검증중. 실데이터 6,123건 문서 전수 감사 불일치 0건, 레거시 대비 오탐 3건 제거·미탐 1건(117자 복사) 검출로 정확성 입증. 주요 판단 38건을 근거·기각안과 함께 ADR로 문서화</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.17</span>CGV 예매 오픈 알리미 구현</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-08-24 ~ 2026-08-25</td></tr>
+      <tr><th>사이트 URL</th><td><a href="https://www.yggz.co.kr" target="_blank" rel="noopener">https://www.yggz.co.kr</a></td></tr>
+      <tr><th>프로젝트 소개</th><td>특정 영화·상영관의 신규 회차 등록/취소표 발생을 감시하여 Windows 토스트·카카오톡으로 알리는 앱 (exe 배포)</td></tr>
+      <tr><th>착수 배경</th><td>인기 상영관의 예매 오픈·취소표를 수동 감시할 수 없는 불편 해소 (개인 프로젝트로 시작, 배포용으로 발전)</td></tr>
+      <tr><th>투입 포지션</th><td>로직정의 · 개발 (AI 협업)</td></tr>
+      <tr><th>개발 환경</th><td>Python · HTML · 카카오 API · PyInstaller(exe)</td></tr>
+      <tr><th>현재 상황</th><td>배포 완료. 잔여석 수치에 장애인석이 포함되는 오탐을 좌석상세 이중검증으로 해결 + 예약성공</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.18</span>자동 댓글 등록기능 구현</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-08-26</td></tr>
+      <tr><th>사이트 URL</th><td>없음(PC실행)</td></tr>
+      <tr><th>프로젝트 소개</th><td>일일 등록되는 유튜브/네이버 콘텐츠에 대해 AI가 요약·댓글 후보를 생성하고 담당자 승인 후 게시하는 반자동 도구 (exe 배포)</td></tr>
+      <tr><th>착수 배경</th><td>매일 수작업으로 수행하던 유튜브/네이버 소통 업무의 반자동화 필요</td></tr>
+      <tr><th>투입 포지션</th><td>로직정의 · 개발 (AI 협업)</td></tr>
+      <tr><th>개발 환경</th><td>Python · HTML · Gemini · Playwright · Google OAuth · PyInstaller(exe)</td></tr>
+      <tr><th>현재 상황</th><td>배포 완료. 자동화 범위 판단 경위는 1.5절 참조</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">3.19</span>콘텐츠 검수 도구(content-qa) 구현</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-07-28</td></tr>
+      <tr><th>사이트 URL</th><td><a href="http://222.239.220.172:4000" target="_blank" rel="noopener">http://222.239.220.172:4000</a></td></tr>
+      <tr><th>프로젝트 소개</th><td>강의 차시별 영상·자막·교안·타임라인·강의계획서 세팅 상태를 자동 검사하는 도구</td></tr>
+      <tr><th>착수 배경</th><td>콘텐츠제작관리팀의 육안 검수 작업 자동화 의뢰. 운영 코드 무수정·운영 DB 조회 전용의 완전 분리형 도구로 방향 설정</td></tr>
+      <tr><th>투입 포지션</th><td>기획 · 개발 전담 (AI 협업, 반나절 구현)</td></tr>
+      <tr><th>개발 환경</th><td>Python · PDF 비교 · AI 챗봇 연계</td></tr>
+      <tr><th>현재 상황</th><td>운영중. 차시당 검사속도 3초대 → 1초대 개선 (병목 5개소 프로파일링, 제5장 참조)</td></tr>
+    </table></div>
+  </div>
+
+  <hr class="thin" id="s4">
+
+  <h2 class="sec"><span class="no">4.</span>개인 프로젝트 수행 이력</h2>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">4.1</span>여기가자(YGGZ) — 가족 맞춤형 장소 추천 서비스</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-06 ~ (진행 중)</td></tr>
+      <tr><th>사이트 URL</th><td><a href="https://www.yggz.co.kr" target="_blank" rel="noopener">https://www.yggz.co.kr</a></td></tr>
+      <tr><th>프로젝트 소개</th><td>블로그·유튜브 콘텐츠를 수집하여 AI가 분석하고, 장소별 메타데이터(추천연령·주차·우천적합도·체류시간 등)를 자동 구축하는 추천 서비스</td></tr>
+      <tr><th>착수 배경</th><td>가족 단위 나들이 장소 선정 시 블로그·유튜브를 수기 검색해야 하는 불편을 데이터 품질로 해소하고자 개인 기획</td></tr>
+      <tr><th>투입 포지션</th><td>1인 수행 (PM · 기획 · 개발 · 운영, AI 협업 구조를 아키텍처 문서에 명시)</td></tr>
+      <tr><th>개발 환경</th><td>FastAPI(Python 3.11) · PostgreSQL 17 · Nginx · Gemini · HTMX · Bootstrap 5</td></tr>
+      <tr><th>현재 상황</th><td>장소 173건 추천점수 산출, 원문 데이터 2만여 건 수집, DB 테이블 27개 규모로 운영 중</td></tr>
+    </table></div>
+  </div>
+
+  <h3 class="item">주요 의사결정</h3>
+  <ul class="dash">
+    <li><b>AI 호출량 1/30 축소</b> — 콘텐츠 1건당 AI 역할 6개가 개별 판단하는 원설계(장소당 약 30회 호출)를, 장소 단위 일괄 판단 방식으로 변경하여 실행 가능성을 우선함</li>
+    <li><b>추출 항목 50개 → 15개 축소</b> — 다수 항목의 저정확도보다 핵심 항목의 고정확도가 실사용에 유효하다고 판단함</li>
+    <li><b>판별 불가 항목의 자동 처리 배제</b> — API 카테고리만으로 구분 불가한 사례(비즈니스 호텔 vs 가족형 리조트)는 자동 삭제 대신 담당자 확인 대기열로 이관하도록 설계함</li>
+    <li><b>DB 권한 구조 재설계</b> — 3계정 완전 격리안이 관리자 화면 요건과 충돌함을 확인, 핵심 보안 목적(회원 데이터와 외부 콘텐츠 코드의 접근 분리)은 유지한 채 2계정으로 조정함</li>
+    <li><b>질의와 실행의 권한 분리</b> — 명시적 개발 지시 전에는 AI가 코드를 수정하지 못하도록 규칙화함</li>
+  </ul>
+
+  <h3 class="item">주요 문제해결</h3>
+  <ul class="dash">
+    <li>물류회사·유흥업소·행정구역명이 관광지로 오분류되어 유입, 수집-분석 사이 검증 단계를 신설하여 차단함</li>
+    <li>초기화 기능의 설계 결함과 안전점검 쿼리 버그가 겹쳐 원문 665건이 복구 불가 삭제되는 사고 발생. 이후 "삭제는 초기화에 미포함", "삭제 전 담당자 확인"을 원칙화함</li>
+    <li>대형 공원 1개소가 시설별 4개 장소로 분리 수집된 사례를 좌표·명칭 분석으로 병합함 (좌표 최대 700m 차이)</li>
+    <li>폐업 위험으로 오감지된 사례가 실제로는 동일 위치 상호 변경(좌표 7m 차이)임을 확인, 중복 탐지 기준의 사각지대로 등록함</li>
+    <li>신규 지역 분석 미실행의 원인을 추적하여, 검증 게이트가 자동 실행 스케줄에 미연결된 구성 누락임을 확인·편입함</li>
+    <li>유튜브 자막 수집이 서버(클라우드 IP)에서 차단됨을 확인. AI 직접 추출 대안은 비용 산정(영상당 약 39원, 전체 약 3만 5천원) 후 비용 대비 효과 부족으로 기각함</li>
+  </ul>
+
+  <hr class="thin" id="s5">
+
+  <h2 class="sec"><span class="no">5.</span>주요 문제해결 사례</h2>
+  <p class="sec-intro">AI 산출물을 그대로 수용하지 않고, 재현·데이터 대조를 통해 원인을 규명한 사례를 프로젝트별로 정리하였음.</p>
+
+  <h4 class="proj">코인 채굴 악성코드 대응 <span class="kr">— 사내 PC 6대 감염 규명·제거 (2026-08)</span></h4>
+  <ol class="issues">
+    <li>PC 메모리 사용률 문의를 계기로 이벤트 로그와 커밋 메모리 수치 불일치(61GB 중 약 50GB 미귀속)를 추적, 정상 프로세스(svchost)로 위장한 코인 채굴 악성코드(XMRig·WildRig)와 백신을 무력화한 자기 방어 기법(Defender 예외 자동등록)까지 AI와 함께 규명함. 조사 중 발생한 확증편향 오판(무관한 드라이버를 원인으로 지목)도 인지·정정함.</li>
+    <li><b>확보한 판별 지표를 코드화해 전사 점검·제거 도구를 직접 제작·배포함</b> — 15대 중 6대 감염을 확인·제거하고, 정보유출·서버침해 없이 완전포맷 없이 대응을 종결함.</li>
+  </ol>
+
+  <h4 class="proj">유니AI <span class="kr">— 학점LMS AI 질문/답변</span></h4>
+  <ol class="issues">
+    <li>로그인 세션이 메시지 1회 송수신 후 즉시 만료되는 결함 발생. DB의 구형 설정이 특정 시각 컬럼을 갱신 시마다 현재 시각으로 자동 덮어쓰고 있어, 세션 갱신 때마다 만료 시각이 함께 초기화되던 것으로 확인함. 테이블 정의 직접 대조로 규명함.</li>
+    <li>화면 요소 숨김 처리가 미동작. 기존 CSS의 우선순위가 더 높아 스크립트 처리만으로는 적용되지 않던 것으로 확인, 표시 속성을 직접 지정하여 해결함.</li>
+    <li>조회 전용 DB 연결 추가 시 구분자 미지정으로 시스템이 임의의 DB를 선택, 마이그레이션이 오적용될 위험을 사전 확인함 (동일 함정이 모사방지솔루션·유니인사이트에서도 반복 확인됨).</li>
+    <li>서비스 도메인이 기존 서비스와 중복됨을 배포 중 확인, 도메인을 변경함.</li>
+    <li>권한 최소화를 위해 도입한 전용 뷰가 특정 서버에서만 조회 거부됨. 뷰의 실행 권한 설정이 해당 서버에 부재한 계정을 참조하던 것으로 규명함.</li>
+    <li>운영 DB 비밀번호가 공개 커밋 대상 예시 설정 파일에 기재된 것을 배포 직전 발견, 커밋 전 제거하고 실값은 서버에만 보관함.</li>
+  </ol>
+
+  <h4 class="proj">모사방지솔루션 <span class="kr">— 최다 사례</span></h4>
+  <ol class="issues">
+    <li>단위 테스트 전건 통과 상태에서 실데이터 투입 시 엔진 기동 불가. 핵심 구성요소가 특정 DB 연결 존재 시에만 생성되는 조건부 설정으로, 테스트 환경에서는 재현 불가한 유형의 결함임을 확인함.</li>
+    <li>특정 문서 포맷(HWPX) 파싱 100% 실패. 표준 라이브러리 자체의 결함(정상 파일도 빈 값 반환, 파일 미해제로 삭제 불가 부작용 동반)을 확인하고, 파일 내부 구조 직접 해석 방식으로 전환함.</li>
+    <li>이미지 전용 스캔 PDF가 "정상, 0%"로 표시되어 미검사 문서가 무혐의로 오독될 위험 확인. "판정 유보" 등급을 신설하여 구분함.</li>
+    <li>설정 저장은 되나 실제 반영되지 않는 "조용한 실패"가 반복 발생 (저장값을 읽는 코드 부재, 이종 설정값 혼재 표시 등). 이후 "해당 값을 실제로 읽는 코드의 위치를 우선 확인한다"를 원칙화함.</li>
+    <li>동일 문서의 표절률이 검사 회차에 따라 0%와 61%로 상반되는 현상 발생. 과제 지문 자동 제외 로직이 당해 과제의 지문만 제거하고 비교 대상 과제의 지문은 미제거함이 원인으로 규명, 제외 범위를 확대하여 해결함.</li>
+    <li>좌표 오류 보고를 조사한 결과 엔진이 아닌 검증 스크립트의 오판(Java와 Python의 문자 계수 방식 차이)으로 확인함. 조사 과정에서 조합형 한글이 음절 중간에서 절단되는 별개의 실결함을 추가 발견·수정함.</li>
+    <li>비밀번호 해시를 명령줄로 입력하는 과정에서 셸이 특수기호를 해석하여 60자 값이 16자로 절단 저장됨(무오류). 이후 해당 유형 값은 파일 경유 입력으로 절차화함.</li>
+    <li>새벽 3시 20분으로 설정한 자동 배치가 실제로는 낮 12시 20분에 실행됨. 컨테이너 기본 시간대(UTC)에 대한 시간대 미명시가 원인으로 확인함.</li>
+    <li>과거 데이터 적재 자동화가 2일간 무증상 미동작. 환경변수의 export 누락으로 하위 프로세스에 값이 미전달되던 것으로 규명함.</li>
+    <li>해소된 실패 건이 화면에 "실패 91건"으로 잔존 표시됨. 실패 목록이 과거 회차 기록까지 합산 표시하던 것이 원인으로 확인함.</li>
+  </ol>
+
+  <h4 class="proj">유니인사이트 <span class="kr">— 경영 의사결정 대시보드</span></h4>
+  <ol class="issues">
+    <li>정상 응답(200) 상태에서 페이지가 중도 절단되는 결함 반복. 날짜 타입 데이터의 화면단 변환 실패가 무증상 진행되던 것으로 규명함 (동일 패턴 2회 재발).</li>
+    <li>당일 매출이 상시 전일값으로 표시되는 문제를 조사, 원본 시스템(실시간 조회)과 이관 시스템(배치 적재 조회)의 구조 차이를 확인함. 조사 과정에서 해당 배치조차 수동 실행 이후 미가동 상태였음이 드러나, 일일 자동 배치 체계를 신규 설계함.</li>
+    <li>광고 데이터 수집이 이관 후 전건 실패 상태였으나 로그에 "성공, 0건"으로 기록되어 3일간 미인지. 요청 URL 조립 결함과 성공/실패/건너뜀 미구분 결함이 중첩된 것으로 확인, 상태 구분 체계를 재설계함.</li>
+    <li>백필 데이터가 화면에 전량 0으로 표시됨. 컬럼 주석(영문 코드)과 실제 서비스 코드의 조회값(한글 리터럴)이 상이함이 원인으로, 8,308건을 재수정함. "컬럼 주석을 신뢰하지 않고 실코드 값을 확인한다"를 원칙화함.</li>
+    <li>환불액이 약 1,300만원 과소 집계됨을 발견. 날짜 단위 필터로 인한 종료일 전건 누락과 테스트 계정 주문 혼입이 원인으로, 재수집·정정함 (49건/2,855만원 → 59건/4,154만원).</li>
+    <li>광고 API 전건 실패의 원인을 버전별 실호출 대조로 추적, 사용 중이던 API 버전의 지원 종료를 확인함 (오류 응답이 표준 형식이 아닌 일반 404로 반환되어 진단이 지연됨).</li>
+  </ol>
+
+  <h4 class="proj">CDMS · 기존 모사시스템 <span class="kr">— 레거시 진단</span></h4>
+  <p class="proj-note">양 시스템 모두 문서·형상관리 이력이 부재한 레거시로, "구조 파악 완료 전 원본 무수정" 원칙 하에 진단을 선행함.</p>
+  <ol class="issues">
+    <li>운영 서버 전용 경로(리눅스 절대경로) 하드코딩으로 로컬 실행이 불가한 상황을, 코드 수정 없이 Windows 정션(디렉터리 링크)으로 우회함.</li>
+    <li>콘텐츠 파일(로컬 생성)과 DB 기록(접속 서버 저장)의 저장 위치 불일치 시 타 환경에서 빈 콘텐츠로 표시되는 정합성 함정을, 장애 발생 전 코드 분석만으로 사전 식별하여 운영 규칙으로 문서화함.</li>
+    <li>교안 저장 시마다 생성되는 백업 파일에 삭제·개수 제한 로직이 부재함을 확인, 디스크 잠식 위험으로 사전 등록함.</li>
+    <li>(기존 모사시스템) 앱서버 2대 구성으로 파일도 이중화된 것으로 인식되던 구조를 SSH 실사로 검증, 실제로는 1대의 로컬 디스크에만 실물이 존재하는 단일 장애점임을 확인함. 백업 서버 예약작업 전수 조사로 제출파일 원본 백업의 부재 가능성까지 확인·보고함.</li>
+    <li>(기존 모사시스템) 판정 로직을 DB 저장 프로시저 원문 확보로 직접 분석, 100자 고정절단·완전일치 비교의 구조적 결함과 문서 말미 누락 버그(구버전 대조로 리팩터링 중 발생한 회귀 버그로 특정)를 규명함. 본 진단이 모사방지솔루션 전면 교체 결정의 직접 근거가 됨.</li>
+  </ol>
+
+  <h4 class="proj">aimaker <span class="kr">— AI 교안 슬라이드 생성</span></h4>
+  <ol class="issues">
+    <li>AI 생성 소요시간(30초~2분) 중 재생성 요청 시 동일 버전 번호가 부여되어 기존 산출물이 무증상 덮어써지는 위험을 확인, 요청 시점에 버전을 선점하는 방식으로 차단함.</li>
+    <li>식별값이 요청 본문에만 포함되어 프록시 서버의 권한 검사가 우회되는 결함을 확인, 요청 방식을 통일하여 차단함.</li>
+    <li>양 시스템(본 서비스·AI 도구)의 작업단계 복귀 처리 규칙 불일치로 시작시각이 종료시각보다 늦은 모순 데이터가 축적됨을 확인, 상태 전이 규칙을 재정렬함.</li>
+  </ol>
+
+  <h4 class="proj">자동 댓글 등록기능</h4>
+  <ol class="issues">
+    <li>스프레드시트를 "1행 1일" 구조로 가정하였으나 실제는 날짜 헤더 반복형 그리드 구조로 확인, 연도 미표기 헤더의 중복 매칭(링크 3건이 8건으로 합산되는 결함)까지 규명하여 "최신 블록 우선" 규칙으로 재설계함.</li>
+    <li>exe 파일명이 한글일 경우 빌드 중간 폴더 생성이 Windows API 수준에서 실패함을 확인, 파일명만 영문으로 제한함 (화면 표시 텍스트는 무관).</li>
+    <li>exe 용량 과대(103MB)의 원인을 빌드 도구의 정적 분석 오인(미사용 선택 기능의 의존성 포함)으로 규명, 74MB로 감량 후 실행 재검증함.</li>
+    <li>exe 패키징 후에만 재현되는 브라우저 경로 탐지 실패를 규명함 — 번들 리소스를 로컬 설치로 오인하여 빈 임시 폴더를 참조하던 것으로, 환경변수로 실경로를 고정하여 해결함.</li>
+  </ol>
+
+  <h4 class="proj">SSL 인증서 갱신 <span class="kr">— 도구화 중단 결정 프로젝트 (1.6절 참조)</span></h4>
+  <ol class="issues">
+    <li>Windows에서 python3 명령이 Microsoft Store 연결용 스텁으로 잡혀 무증상 실패하는 현상을 확인, 실제 실행 여부까지 검증하는 방식으로 수정함.</li>
+    <li>특정 Windows 서버에서만 인증서 검증이 실패함. 해당 서버의 .NET 기본 TLS 협상이 최신 규격을 미선택하는 구성이 원인으로, 프로토콜 명시 지정으로 해결함.</li>
+    <li>인증서 교체 후에도 브라우저에 구 만료일이 표시되는 현상을 오작동이 아닌 정상 동작(기존 TLS 연결 재사용)으로 판정하고, 매뉴얼에 원인과 확인 방법을 명기함.</li>
+  </ol>
+
+  <h4 class="proj">로그리포트 <span class="kr">— 실전 장애대응 최다</span></h4>
+  <ol class="issues">
+    <li>최소 5일 연속 재발한 관리자 결제 오류의 근본원인을 규명함. 웹서버 로그만으로는 발생 사실만 확인 가능했으나, 애플리케이션 로그 통합 분석으로 장바구니 공백 상태에서 DB 조회 조건이 붕괴되는 지점을 코드 라인 단위로 특정함.</li>
+    <li>주말마다 발생한 분석 실패의 원인을 규명함 — 수집 스크립트의 시간대 설정이 해당 환경에서 미인식되어 무증상으로 UTC로 회귀, 새벽 실행 시각 기준 날짜가 1일씩 어긋나던 것. 시간대 명칭 대신 고정 시차값으로 변경하고 익일 새벽 시각을 시뮬레이션하여 수정 전후를 검증함.</li>
+    <li>서버 재부팅 후 4일간 자동 실행이 무증상 중단됨 (실패 알림도 미발송). 예약 작업의 "로그인 시에만 실행" 설정과 "누락 실행 보정" 미설정의 중첩이 원인으로, 양 설정을 필수값으로 변경하고 설정 이탈 감지용 점검 스크립트를 추가함. 명령줄 등록 도구가 특정 옵션 미지정 시 무증상으로 해당 설정을 적용하는 함정이 근본 원인이었음.</li>
+    <li>"회원조회 화면 장애" 신고를 로그 시간순 재구성으로 조사, 회원조회는 원인이 아닌 피해 지점이며 23분 전 별도 화면의 지연에서 시작된 서버 자원 고갈이 실체임을 규명함. "저속 쿼리 원인" 가설은 실측 실행시간 확인으로 자체 기각하였고, 최유력 후보까지 좁히되 미확정 사실을 명기한 후 차후 확정 가능하도록 진단 체계(로깅·자동 스냅샷) 구축을 우선 결론으로 정리함.</li>
+    <li>"영상이 특정 시점(6분 43초)에서 정지" 문의를 단계 조사함 — 파일 손상 가설은 프레임 단위 검사로, CDN 캐시 오염 가설은 동일 노드 재생 테스트로 각각 기각. 핵심 근거였던 "동일 지점 반복"조차 이어보기 기능에 의한 착시 가능성을 자체 발견하여 철회함. 최종 후보(브라우저 캐시 손상)는 확정이 아닌 최유력 가설로 명기하고, 증거 보존 순서를 반영한 단계별 진단 절차를 제작·전달함.</li>
+    <li>일일 접속 기록 60만 건을 User-Agent 기준 전수 분류하여 정상 검색봇, 차단 금지 대상 기능성 봇(메신저 링크 미리보기 등), 정체불명 자동화 트래픽을 구분하고 분류별 차단 타당성 근거를 정리함.</li>
+  </ol>
+
+  <h4 class="proj">콘텐츠 검수 도구(content-qa)</h4>
+  <ol class="issues">
+    <li>차시당 검사 소요 3초 초과에 대한 개선 요청을 프로파일링으로 대응, 병목 5개소(경로 반복 계산, PDF 전문 추출, 자막 전량 비교, 순차 처리, 강의계획서 재추출)를 각각 캐싱·샘플링·병렬화로 개선하여 1초대로 단축함.</li>
+  </ol>
+
+  <div class="sign" style="margin-top:44px; text-align:right;"></div>
+
+</div>
