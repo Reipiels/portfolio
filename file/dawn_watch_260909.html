@@ -1,0 +1,859 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>새벽 파수꾼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;600;800&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* ============================================================
+   새벽 파수꾼 — 시간축 컨셉
+   페이지를 읽어 내려가는 것 = 하룻밤이 지나가는 것
+   색은 장식이 아니라 시각(時刻)의 함수다.
+   ============================================================ */
+
+:root, :root[data-phase="night"]{
+  --bg:#060910; --panel:#0C111C; --ink:#DDE3EE; --ink-2:#A8B6D1; --ink-3:#6B7896;
+  --rule:#1B2436; --rule-strong:#2C3850; --accent:#E3A24A; --alarm:#E4635A; --good:#5FC095;
+}
+:root[data-phase="predawn"]{
+  --bg:#101728; --panel:#182034; --ink:#E4E9F2; --ink-2:#B0BCD4; --ink-3:#78849E;
+  --rule:#26314A; --rule-strong:#374561; --accent:#EDB25A; --alarm:#EC6E62; --good:#63C79A;
+}
+:root[data-phase="dawn"]{
+  --bg:#2C2530; --panel:#372E39; --ink:#F4EBE2; --ink-2:#C3B0AC; --ink-3:#93807F;
+  --rule:#463A46; --rule-strong:#5C4C58; --accent:#F6C453; --alarm:#F07A6A; --good:#71CDA2;
+}
+:root[data-phase="day"]{
+  --bg:#EDE6D5; --panel:#F4EEE0; --ink:#2A2318; --ink-2:#5C5140; --ink-3:#8A7D68;
+  --rule:#DCD2BC; --rule-strong:#B7A98C; --accent:#8A5A18; --alarm:#A6362B; --good:#1E6B45;
+}
+
+*{ box-sizing:border-box; }
+html{ background:var(--bg); }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'IBM Plex Sans KR', -apple-system, 'Malgun Gothic', sans-serif;
+  font-weight:400;
+  font-size:19px;
+  line-height:1.78;
+  -webkit-font-smoothing:antialiased;
+  overflow-anchor:none;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+body, header, section, article, figure, figcaption, div, p, h1, h2, h3, span,
+table, td, th, pre, code, svg, text, rect, line, path, circle, polyline, a, dt, dd{
+  transition: background-color .9s linear, color .9s linear, border-color .9s linear,
+              fill .9s linear, stroke .9s linear, opacity .9s linear;
+}
+@media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+
+h1,h2,h3{ font-family:'Hahmlet', serif; font-weight:600; letter-spacing:-0.015em; text-wrap:balance; margin:0; }
+p{ margin:0 0 1.1em; max-width:66ch; }
+em{ font-style:normal; color:var(--accent); }
+strong{ font-weight:600; color:var(--ink); }
+code, .mono{ font-family:'IBM Plex Mono', ui-monospace, Consolas, monospace; }
+a{ color:inherit; }
+a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+::selection{ background:var(--accent); color:var(--bg); }
+
+/* ---------- 레이아웃: 좌측 시각 레일 + 본문 ---------- */
+.frame{
+  display:grid;
+  grid-template-columns:186px minmax(0,1fr);
+  gap:0 56px;
+  max-width:1180px;
+  margin:0 auto;
+  padding:0 32px;
+}
+.rail{ position:relative; }
+.rail-inner{
+  position:sticky; top:0;
+  height:100vh;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:40px 0;
+}
+.rail-line{
+  position:absolute; left:0; top:0; bottom:0; width:1px;
+  background:var(--rule);
+}
+.rail ol{ list-style:none; margin:0; padding:0 0 0 22px; }
+.rail li{ margin:0 0 22px; }
+.rail button{
+  all:unset; cursor:pointer; display:block; width:100%;
+  color:var(--ink-3);
+}
+.rail .t{
+  font-family:'IBM Plex Mono', monospace; font-size:13px; font-weight:500;
+  letter-spacing:.02em; display:block; line-height:1.2;
+}
+.rail .n{ font-size:14px; display:block; line-height:1.35; margin-top:2px; }
+.rail li::marker{ content:none; }
+.rail button::before{
+  content:''; position:absolute; left:-16px; width:9px; height:9px;
+  margin-top:4px; border:1px solid var(--rule-strong); background:var(--bg);
+  transform:translateX(0);
+}
+.rail li{ position:relative; }
+.rail li.on button{ color:var(--ink); }
+.rail li.on .t{ color:var(--accent); }
+.rail li.on button::before{ background:var(--accent); border-color:var(--accent); }
+
+.mobile-rail{ display:none; }
+
+@media (max-width:900px){
+  .frame{ grid-template-columns:1fr; padding:0 22px; gap:0; }
+  .rail{ display:none; }
+  .mobile-rail{
+    display:flex; position:sticky; top:0; z-index:20;
+    align-items:baseline; gap:10px;
+    background:var(--bg); border-bottom:1px solid var(--rule);
+    padding:10px 22px; margin:0 -22px 0;
+    font-size:14px;
+  }
+  .mobile-rail .t{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--accent); }
+  .mobile-rail .n{ color:var(--ink-2); }
+  body{ font-size:17.5px; }
+}
+
+/* ---------- 히어로 ---------- */
+.hero{ padding:104px 0 20px; }
+.hero .kicker{
+  font-size:14.5px; color:var(--ink-3); margin:0 0 26px;
+  border-left:2px solid var(--accent); padding-left:12px;
+}
+.hero h1{
+  font-family:'Hahmlet', serif; font-weight:800;
+  font-size:clamp(2.9rem, 7vw, 4.8rem);
+  line-height:1.04; letter-spacing:-0.03em;
+  margin:0 0 22px;
+}
+.hero .tagline{
+  font-size:clamp(1.15rem, 2.2vw, 1.32rem);
+  color:var(--ink-2); max-width:38ch; font-weight:300;
+  margin-bottom:34px;
+}
+.hero .tagline b{ color:var(--ink); font-weight:500; }
+
+.spec{ border-top:1px solid var(--rule); max-width:520px; margin-bottom:16px; }
+.spec div{
+  display:flex; justify-content:space-between; gap:20px;
+  border-bottom:1px solid var(--rule); padding:9px 0;
+  font-size:14.5px;
+}
+.spec dt{ color:var(--ink-3); margin:0; }
+.spec dd{ margin:0; color:var(--ink); font-family:'IBM Plex Mono',monospace; font-size:14px; }
+
+/* ---------- 히어로 지평선 그래픽 ---------- */
+.horizon{ margin:52px 0 0; }
+.horizon svg{ width:100%; height:auto; display:block; overflow:visible; }
+figure{ margin:0; }
+figcaption{
+  font-size:14px; color:var(--ink-3); margin-top:16px; line-height:1.6;
+}
+
+/* ---------- 섹션 ---------- */
+section{ padding:88px 0; border-top:1px solid var(--rule); }
+section:first-of-type{ border-top:none; }
+.sec-time{
+  font-family:'IBM Plex Mono', monospace; font-size:13.5px; font-weight:500;
+  color:var(--accent); display:block; margin-bottom:10px;
+}
+section h2{
+  font-size:clamp(1.7rem, 3.6vw, 2.3rem);
+  line-height:1.25; margin:0 0 28px; max-width:22ch;
+}
+section p{ color:var(--ink-2); }
+
+/* ---------- 장면 (대사) ---------- */
+.scene{
+  border-left:2px solid var(--accent);
+  padding:4px 0 4px 22px; margin:0 0 34px;
+}
+.scene .stamp{
+  font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--ink-3);
+  display:block; margin-bottom:12px;
+}
+.scene .say{
+  font-family:'Hahmlet', serif; font-weight:400;
+  font-size:clamp(1.35rem, 3.2vw, 1.85rem); line-height:1.5;
+  color:var(--ink); max-width:24ch; margin:0 0 14px;
+}
+.scene .after{ font-size:15.5px; color:var(--ink-3); margin:0; }
+
+.pivot{
+  font-family:'Hahmlet', serif; font-size:clamp(1.25rem,2.6vw,1.55rem);
+  line-height:1.65; color:var(--ink); max-width:30ch;
+  border-top:2px solid var(--ink); border-bottom:1px solid var(--rule);
+  padding:20px 0; margin:0 0 30px;
+}
+
+/* ---------- 다이어그램 공통 ---------- */
+.wide{ margin:34px 0; }
+.wide svg{ width:100%; height:auto; display:block; overflow:visible; }
+
+/* ---------- 리포트 목업 ---------- */
+.report{
+  background:var(--panel); border:1px solid var(--rule);
+  margin:34px 0 0;
+}
+.report-head{
+  display:flex; justify-content:space-between; align-items:baseline; gap:14px;
+  padding:12px 18px; border-bottom:1px solid var(--rule);
+  font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--ink-3);
+  flex-wrap:wrap;
+}
+.kpis{ display:grid; grid-template-columns:repeat(4,1fr); }
+.kpis > div{ padding:18px; border-right:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+.kpis > div:last-child{ border-right:none; }
+.kpis .v{ font-size:1.6rem; font-weight:500; color:var(--ink); line-height:1; font-variant-numeric:tabular-nums; }
+.kpis .k{ font-size:13.5px; color:var(--ink-3); margin-top:8px; }
+.finding{
+  display:flex; gap:14px; padding:14px 18px; border-bottom:1px solid var(--rule);
+}
+.finding:last-child{ border-bottom:none; }
+.finding .lv{
+  font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:.02em;
+  padding-top:3px; white-space:nowrap; width:48px; flex-shrink:0;
+}
+.lv-crit{ color:var(--alarm); }
+.lv-attn{ color:var(--accent); }
+.lv-info{ color:var(--ink-3); }
+.finding .ft{ font-size:16px; color:var(--ink); }
+.finding .fd{ font-size:14.5px; color:var(--ink-3); font-family:'IBM Plex Mono',monospace; margin-top:3px; }
+@media (max-width:640px){
+  .kpis{ grid-template-columns:repeat(2,1fr); }
+  .kpis > div:nth-child(2n){ border-right:none; }
+}
+
+/* ---------- 수정안 / diff ---------- */
+.fix{ border:1px solid var(--rule); border-top:2px solid var(--accent); margin:30px 0 0; }
+.fix-head{
+  display:flex; justify-content:space-between; align-items:baseline; gap:14px;
+  padding:16px 18px; border-bottom:1px solid var(--rule); flex-wrap:wrap;
+}
+.fix-head h3{ font-size:1.15rem; font-weight:600; }
+.fix-head .conf{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--good); }
+.fix-body{ padding:18px; }
+.fix-body .plain{ font-size:15.5px; color:var(--ink-2); margin:0 0 18px; }
+.fix dl{ margin:0 0 18px; border-top:1px solid var(--rule); }
+.fix dt{
+  font-size:13.5px; color:var(--ink-3); padding-top:9px;
+}
+.fix dd{
+  margin:0 0 9px; padding-bottom:9px; border-bottom:1px solid var(--rule);
+  font-size:15px; color:var(--ink-2);
+}
+.fix dd code{ font-size:14px; color:var(--ink); }
+pre.diff{
+  font-family:'IBM Plex Mono',monospace; font-size:14px; line-height:1.65;
+  background:var(--bg); border:1px solid var(--rule);
+  padding:14px 16px; margin:0; overflow-x:auto; color:var(--ink-3);
+}
+pre.diff .add{ color:var(--good); }
+pre.diff .del{ color:var(--alarm); }
+.note{ font-size:14px; color:var(--ink-3); margin-top:16px; line-height:1.65; }
+
+/* ---------- 사건 목록 ---------- */
+.cases{ border-top:1px solid var(--rule-strong); }
+.cases article{
+  display:grid; grid-template-columns:126px minmax(0,1fr);
+  gap:0 28px; padding:22px 0; border-bottom:1px solid var(--rule);
+}
+.cases .where{
+  font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--accent);
+  padding-top:5px;
+}
+.cases h3{ font-size:1.15rem; font-weight:600; margin:0 0 6px; }
+.cases p{ font-size:15.5px; margin:0;  }
+@media (max-width:640px){
+  .cases article{ grid-template-columns:1fr; gap:6px; }
+}
+
+/* ---------- 대화 기록 (채팅형) ---------- */
+.talk{ display:flex; flex-direction:column; gap:14px; margin:26px 0 30px; }
+.talk .turn{
+  max-width:78%; padding:10px 18px;
+  border-left:2px solid var(--rule-strong);
+  font-size:16px; background:var(--panel);
+}
+.talk .who{
+  display:block; color:var(--ink-3); font-size:13px;
+  font-family:'IBM Plex Mono',monospace; margin-bottom:4px;
+}
+.talk .turn.me{
+  align-self:flex-end; text-align:right;
+  border-left:none; border-right:2px solid var(--accent);
+}
+.talk .turn.me .who{ color:var(--accent); }
+.talk .turn.me span:last-child{ color:var(--ink); }
+.talk .turn span:last-child{ color:var(--ink-2); }
+.talk code{ font-size:14px; }
+@media (max-width:480px){
+  .talk .turn{ max-width:100%; }
+}
+
+/* ---------- Before / After ---------- */
+.ba{ display:grid; grid-template-columns:1fr 1fr; gap:0; margin:30px 0 0; border-top:1px solid var(--rule-strong); }
+.ba > div{ padding:22px 24px 24px; border-bottom:1px solid var(--rule); }
+.ba > div:first-child{ border-right:1px solid var(--rule); padding-left:0; }
+.ba h3{ font-size:13.5px; font-family:'IBM Plex Mono',monospace; font-weight:500; color:var(--ink-3); margin:0 0 16px; }
+.ba .row{
+  font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--ink-2);
+  padding:7px 0; border-bottom:1px dotted var(--rule);
+}
+.ba .verdict{ font-size:15px; margin-top:16px; line-height:1.6; }
+.ba .bad{ color:var(--alarm); }
+.ba .ok{ color:var(--good); }
+.ba .flow{ font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--ink-2); line-height:2; }
+.ba .flow b{ color:var(--ink); font-weight:500; }
+@media (max-width:700px){
+  .ba{ grid-template-columns:1fr; }
+  .ba > div:first-child{ border-right:none; padding-left:0; }
+  .ba > div{ padding-left:0; padding-right:0; }
+}
+
+/* ---------- 수치 ---------- */
+.figures{ display:grid; grid-template-columns:repeat(4,1fr); border-top:2px solid var(--ink); margin:0 0 18px; }
+.figures > div{ padding:22px 20px 22px 0; border-right:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+.figures > div:last-child{ border-right:none; }
+.figures > div:not(:first-child){ padding-left:20px; }
+.figures .v{
+  font-size:clamp(1.75rem,3.8vw,2.45rem);
+  font-weight:500; line-height:1; color:var(--ink); font-variant-numeric:tabular-nums;
+}
+.figures .k{ font-size:14px; color:var(--ink-3); margin-top:10px; line-height:1.5; }
+@media (max-width:700px){
+  .figures{ grid-template-columns:repeat(2,1fr); }
+  .figures > div:nth-child(2n){ border-right:none; }
+  .figures > div:nth-child(odd){ padding-left:0; }
+}
+
+/* ---------- 마무리 ---------- */
+.close-big{
+  font-family:'Hahmlet', serif; font-weight:600;
+  font-size:clamp(1.6rem, 3.8vw, 2.45rem); line-height:1.45;
+  color:var(--ink); max-width:20ch; margin:0 0 30px;
+}
+.close-last{
+  border-top:2px solid var(--accent); padding-top:22px; margin-top:34px;
+  font-family:'Hahmlet', serif; font-size:clamp(1.2rem,2.6vw,1.5rem);
+  color:var(--ink); max-width:28ch; line-height:1.6;
+}
+footer{
+  border-top:1px solid var(--rule); padding:26px 0 96px;
+  font-size:13.5px; color:var(--ink-3);
+  display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+}
+
+@media print{
+  :root{ --bg:#fff; --panel:#fff; --ink:#000; --ink-2:#333; --ink-3:#666; --rule:#bbb; --rule-strong:#000; --accent:#8a5200; }
+  .rail, .mobile-rail{ display:none; }
+  .frame{ grid-template-columns:1fr; }
+  section{ page-break-inside:avoid; }
+}
+</style>
+
+</head><body><div class="mobile-rail" aria-hidden="true">
+  <span class="t" id="mrTime">23:04</span><span class="n" id="mrName">그날의 장면</span>
+</div>
+
+<div class="frame">
+
+  <!-- ============ 좌측 시각 레일 ============ -->
+  <nav class="rail" aria-label="시각별 목차">
+    <div class="rail-inner">
+      <div class="rail-line"></div>
+      <ol id="railList">
+        <li data-target="s1"><button type="button"><span class="t">23:04</span><span class="n">그날의 장면</span></button></li>
+        <li data-target="s2"><button type="button"><span class="t">그 뒤</span><span class="n">목표를 바꿨다</span></button></li>
+        <li data-target="s3"><button type="button"><span class="t">03:00</span><span class="n">어떻게 동작하는가</span></button></li>
+        <li data-target="s4"><button type="button"><span class="t">06:00</span><span class="n">실제로 잡아낸 것들</span></button></li>
+        <li data-target="s5"><button type="button"><span class="t">09–18시</span><span class="n">다듬어온 과정</span></button></li>
+        <li data-target="s6"><button type="button"><span class="t">42일치</span><span class="n">수치로 보면</span></button></li>
+        <li data-target="s7"><button type="button"><span class="t">다시 03:00</span><span class="n">오류는 끝이 없다</span></button></li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- ============ 본문 ============ -->
+  <main>
+
+    <header class="hero" data-phase="night">
+      <p class="kicker">빌더나잇 시즌 3, 업무 자동화 부문 출전작</p>
+      <h1>새벽 파수꾼</h1>
+      <p class="tagline">밤 11시, 내 휴대폰이 울리기 전에, <b>새벽마다 서비스 <br>이용·오류 기록(로그)을 읽고 원인과 수정안까지 써두는</b><br> 자동 점검 시스템.</p>
+
+      <dl class="spec">
+        <div><dt>사내 코드명</dt><dd>logreport</dd></div>
+        <div><dt>가동 시작</dt><dd>2026-07-29</dd></div>
+        <div><dt>연속 자동실행</dt><dd>42일 무중단</dd></div>
+        <div><dt>실행 위치</dt><dd>내 컴퓨터 안에서만</dd></div>
+        <div><dt>만든 사람</dt><dd>나 + AI</dd></div>
+      </dl>
+
+      <figure class="horizon">
+        <svg viewBox="0 0 1000 260" role="img" aria-label="새벽 3시 수집, 5시 분석, 6시 수정안 작성이 자동으로 끝나고, 예전에는 오전에 대표님이 먼저 오류를 발견해 연락했지만 지금은 이미 정리된 리포트만 도착하는 타임라인">
+          <defs>
+            <linearGradient id="nightDawn" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="var(--bg)"/>
+              <stop offset="58%" stop-color="#241C22"/>
+              <stop offset="82%" stop-color="#6B5030"/>
+              <stop offset="100%" stop-color="var(--accent)"/>
+            </linearGradient>
+          </defs>
+
+          <rect x="40" y="120" width="880" height="10" rx="5" fill="url(#nightDawn)"/>
+
+          <g font-family="IBM Plex Mono, monospace" font-size="14">
+            <!-- 03:00 -->
+            <circle cx="160" cy="125" r="7" fill="var(--bg)" stroke="currentColor" stroke-width="1.5"/>
+            <text x="160" y="100" text-anchor="middle" fill="currentColor" font-weight="700">03:00</text>
+            <text x="160" y="160" text-anchor="middle" fill="currentColor" opacity=".7" font-family="IBM Plex Sans KR, sans-serif" font-size="14.5">수집</text>
+
+            <!-- 05:00 -->
+            <circle cx="420" cy="125" r="8" fill="#241C22" stroke="currentColor" stroke-width="1.5" stroke-opacity=".7"/>
+            <text x="420" y="100" text-anchor="middle" fill="currentColor" font-weight="700">05:00</text>
+            <text x="420" y="160" text-anchor="middle" fill="currentColor" opacity=".7" font-family="IBM Plex Sans KR, sans-serif" font-size="14.5">분석</text>
+
+            <!-- 06:00 -->
+            <circle cx="560" cy="125" r="9" fill="#6B5030" stroke="var(--accent)" stroke-width="1.5" stroke-opacity=".8"/>
+            <text x="560" y="100" text-anchor="middle" fill="currentColor" font-weight="700">06:00</text>
+            <text x="560" y="160" text-anchor="middle" fill="currentColor" opacity=".7" font-family="IBM Plex Sans KR, sans-serif" font-size="14.5">수정안</text>
+
+            <!-- 08~09 -->
+            <circle cx="840" cy="125" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="840" y="100" text-anchor="middle" fill="currentColor" font-weight="700">08–09시</text>
+            <text x="840" y="160" text-anchor="middle" fill="currentColor" opacity=".7" font-family="IBM Plex Sans KR, sans-serif" font-size="14.5">사람 출근</text>
+          </g>
+
+          <!-- before/after annotation -->
+          <line x1="840" y1="178" x2="840" y2="200" stroke="currentColor" stroke-opacity=".35"/>
+          <g font-family="IBM Plex Sans KR, sans-serif">
+            <text x="840" y="218" text-anchor="middle" fill="currentColor" font-size="13" opacity=".5" text-decoration="line-through">예전: 여기서 지적이 시작됨</text>
+            <text x="840" y="238" text-anchor="middle" fill="var(--accent)" font-size="14" font-weight="700">지금: 이미 끝난 리포트만 도착</text>
+          </g>
+        </svg>
+        <figcaption>새벽 3시 수집 → 5시 분석 → 6시 수정안 작성까지 사람 개입 없이 끝나고, 출근 시각에는 이미 정리된 리포트만 남는다.</figcaption>
+      </figure>
+    </header>
+
+    <!-- ============ 23:04 ============ -->
+    <section id="s1" data-phase="night">
+      <span class="sec-time">23:04</span>
+      <h2>그날의 장면</h2>
+
+      <div class="scene">
+        <span class="stamp">2026-07-2X 23:04 · 착신, 개인 휴대폰</span>
+        <p class="say">"이거 왜 안 됩니까?"</p>
+        <p class="after">대표님이 서비스를 쓰다가 오류를 먼저 발견했다. 퇴근 후 걸려오는 이보다 끔찍한 전화는 없다.</p>
+      </div>
+
+      <p>그런데 이건 유별난 사고가 아니라 반복되는 패턴이었다. 주말 사이 조용히 발생해 월요일에야 눈에 띄기도 했고, 1:1 문의로 하나둘 쌓인 게 운영부서에 의해 취합돼 <em>"이거 자꾸 반복되는 원인이 뭔가요?"</em>로 돌아오기도 했다.</p>
+      <p>공통점은 하나였다. <strong>우리가 제일 늦게 안다</strong>는 것. 그리고 지적을 받고 나서야 로그를 뒤져 언제부터 그랬는지, 왜 몰랐는지부터 확인하는 일이 매번 반복됐다.</p>
+    </section>
+
+    <!-- ============ 그 뒤 ============ -->
+    <section id="s2" data-phase="night">
+      <span class="sec-time">그 뒤</span>
+      <h2>그래서, 목표를 바꿨다</h2>
+
+      <p class="pivot">"오류 없는 시스템"은 불가능하다. 대신 발견&nbsp;순서를 뒤집기로 했다.</p>
+
+      <p>대표님도, 운영팀도, 고객 문의도 아닌, 우리가 가장 먼저 아는 시스템. 이미 인강 서비스를 운영하는 서버 2대의 로그를 수동으로 분석해, 반복되는 오류(5xx)나 챗봇 응답지연, 트래픽 쏠림 같은 패턴을 찾아내고 있었다. 그 사람이 하던 일을 매일 새벽 무인으로 반복시키는 게 시작이었다.</p>
+      <p>이 서비스의 소스는 2015년부터 이어져 왔다. 그 사이 여러 유지보수 개발자를 거치며 문서와 소스 관리가 매끄럽지만은 않았고, 그만큼 잔오류가 끊이지 않는 구조가 됐다. "오류 없는 시스템"이 애초에 성립하기 어려운 조건이었다는 뜻이기도 하다.</p>
+      <p>게다가 이 모든 걸 감당하는 사람은 사실상 나 혼자다. 인력을 더 늘리는 대신, 새벽마다 대신 지켜봐줄 동료를 만들기로 했다.</p>
+    </section>
+
+    <!-- ============ 03:00 ============ -->
+    <section id="s3" data-phase="predawn">
+      <span class="sec-time">03:00</span>
+      <h2>어떻게 동작하는가</h2>
+
+      <p>숫자를 세는 건 정해진 규칙대로 움직이는 프로그램이 맡고, "이게 왜 문제인지" 판단만 AI가 맡는다. 로그 원본을 통째로 AI에게 보여주지 않고, 분석이 끝나면 원본은 곧바로 지운다.</p>
+
+      <figure class="wide">
+        <svg viewBox="0 0 900 300" role="img" aria-label="새벽 3시부터 6시까지는 AI가 로그를 수집하고 분석해 수정안을 쓴다. 9시부터 18시까지는 사람이 확인하고 검증하며 배포 계획을 세운다. 다음날 새벽 파수꾼이 그 결과를 다시 확인하는 하루 단위 루프를, 위쪽 실선(당일 인수인계)과 아래쪽 점선(다음날 재확인)으로 표시했다">
+          <defs>
+            <marker id="loopArrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+            </marker>
+            <marker id="loopArrowMuted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+          </defs>
+          <g font-family="IBM Plex Sans KR, sans-serif" fill="currentColor">
+            <!-- 왼쪽: AI -->
+            <line x1="30" y1="60" x2="265" y2="60" stroke="currentColor" stroke-opacity=".55" stroke-width="2"/>
+            <text x="30" y="88" font-size="16.5" font-weight="600">새벽 3–6시 · 파수꾼</text>
+            <g font-family="IBM Plex Mono, monospace" font-size="14" opacity=".75">
+              <text x="30" y="120">03:00</text><text x="92" y="120" font-family="IBM Plex Sans KR, sans-serif">수집 — 로그 내려받기</text>
+              <text x="30" y="146">05:00</text><text x="92" y="146" font-family="IBM Plex Sans KR, sans-serif">분석 — 원인·우선순위 판단</text>
+              <text x="30" y="172">06:00</text><text x="92" y="172" font-family="IBM Plex Sans KR, sans-serif">수정안 — 고쳐보고 diff 정리</text>
+            </g>
+            <text x="30" y="204" font-size="14" opacity=".5">사람 없이 혼자 돈다</text>
+
+            <!-- 오른쪽: 사람 -->
+            <line x1="510" y1="60" x2="700" y2="60" stroke="currentColor" stroke-opacity=".55" stroke-width="2"/>
+            <text x="510" y="88" font-size="16.5" font-weight="600">9–18시 · 사람</text>
+            <g font-size="14" opacity=".75">
+              <text x="510" y="120">확인 — 새벽 리포트 읽기</text>
+              <text x="510" y="146">검증 — 실제로 재현되는지 확인</text>
+              <text x="510" y="172">수정·배포계획 — 필요하면 반영</text>
+            </g>
+            <text x="510" y="204" font-size="14" opacity=".5">여기서부터는 사람이 판단한다</text>
+
+            <!-- 위쪽 화살표: 당일 인수인계 (실선, 두 박스 사이 여백 정중앙) -->
+            <line x1="274" y1="110" x2="502" y2="110" stroke="var(--accent)" stroke-width="2.5" marker-end="url(#loopArrowAccent)"/>
+            <text x="388" y="96" text-anchor="middle" font-size="14" fill="var(--accent)" font-weight="600">인수인계</text>
+
+            <!-- 아래쪽 화살표: 다음날 새벽 재확인 (점선, U자형, 각 박스 중앙 기준) -->
+            <path d="M605,214 L605,252 L148,252 L148,216" fill="none" stroke="currentColor" stroke-width="2" stroke-opacity=".75" stroke-dasharray="6 5" marker-end="url(#loopArrowMuted)"/>
+            <text x="377" y="278" text-anchor="middle" font-size="14.5" opacity=".8">다음날 새벽, 파수꾼이 그 결과를 다시 확인한다</text>
+          </g>
+        </svg>
+        <figcaption>파수꾼이 새벽에 진단하면 사람이 낮 동안 확인·검증·배포계획을 세우고, 다음날 새벽 파수꾼이 그 결과를 다시 확인한다. 이 루프가 매일 반복된다.</figcaption>
+      </figure>
+
+      <p>그 새벽 3시간을 좀 더 들여다보면 이렇다.</p>
+
+      <figure class="wide">
+        <svg viewBox="0 0 1000 250" role="img" aria-label="3시 수집, 5시 분석, 6시 수정안 작성, 그리고 이메일 발송으로 이어지는 네 단계 자동 처리 흐름과 각 단계 사이에 넘어가는 산출물 파일">
+          <g font-family="IBM Plex Sans KR, sans-serif" fill="currentColor">
+            <line x1="0" y1="34" x2="1000" y2="34" stroke="currentColor" stroke-opacity=".5" stroke-width="2"/>
+            <line x1="0" y1="170" x2="1000" y2="170" stroke="currentColor" stroke-opacity=".25"/>
+            <line x1="248" y1="34" x2="248" y2="170" stroke="currentColor" stroke-opacity=".25"/>
+            <line x1="500" y1="34" x2="500" y2="170" stroke="currentColor" stroke-opacity=".25"/>
+            <line x1="752" y1="34" x2="752" y2="170" stroke="currentColor" stroke-opacity=".25"/>
+
+            <!-- 1 -->
+            <text x="16" y="60" font-family="IBM Plex Mono,monospace" font-size="13.5" opacity=".55">03:00</text>
+            <text x="16" y="88" font-size="17.5" font-weight="600">수집</text>
+            <text x="16" y="114" font-size="14" opacity=".7">서버에 접속해 접속기록과</text>
+            <text x="16" y="134" font-size="14" opacity=".7">오류기록을 내려받는다</text>
+            <text x="16" y="158" font-size="13" opacity=".5">정해진 규칙대로, AI 사용 안 함</text>
+
+            <!-- 2 -->
+            <text x="264" y="60" font-family="IBM Plex Mono,monospace" font-size="13.5" opacity=".55">05:00</text>
+            <text x="264" y="88" font-size="17.5" font-weight="600">분석</text>
+            <text x="264" y="114" font-size="14" opacity=".7">AI가 읽고 우선순위와</text>
+            <text x="264" y="134" font-size="14" opacity=".7">원인을 해석한다</text>
+            <text x="264" y="158" font-size="13" opacity=".5">쓰던 구독 재사용, 추가 비용 없음</text>
+
+            <!-- 3 -->
+            <text x="516" y="60" font-family="IBM Plex Mono,monospace" font-size="13.5" opacity=".55">06:00</text>
+            <text x="516" y="88" font-size="17.5" font-weight="600">수정안</text>
+            <text x="516" y="114" font-size="14" opacity=".7">코드 복사본 안에서</text>
+            <text x="516" y="134" font-size="14" opacity=".7">실제로 고쳐본다</text>
+            <text x="516" y="158" font-size="13" opacity=".5">바뀐 내용은 프로그램이 그대로 뽑는다</text>
+
+            <!-- 4 -->
+            <text x="768" y="60" font-family="IBM Plex Mono,monospace" font-size="13.5" opacity=".55">발송</text>
+            <text x="768" y="88" font-size="17.5" font-weight="600">이메일</text>
+            <text x="768" y="114" font-size="14" opacity=".7">SMTP로 실제 발송</text>
+            <text x="768" y="158" font-size="13" opacity=".5">AI는 발송하지 않음</text>
+
+            <!-- 산출물 -->
+            <g font-family="IBM Plex Mono,monospace" font-size="12.5" fill="var(--accent)">
+              <text x="248" y="26" text-anchor="middle">summary.md</text>
+              <text x="500" y="26" text-anchor="middle">findings.json</text>
+              <text x="752" y="26" text-anchor="middle">fix.html</text>
+            </g>
+
+            <text x="0" y="204" font-size="14.5" fill="var(--accent)" font-weight="500">그 복사본은 실행 전후로 두 번 초기화된다. 저장하거나 배포할 권한 자체가 없다.</text>
+            <text x="0" y="228" font-size="14" opacity=".55">개발자가 실제로 쓰는 폴더는 이 자동화가 아예 건드리지 않는다.</text>
+          </g>
+        </svg>
+      </figure>
+
+      <div class="report">
+        <div class="report-head">
+          <span>새벽 리포트 축약본</span><span>값은 예시</span>
+        </div>
+        <div class="kpis">
+          <div><div class="v">128,412</div><div class="k">총 요청수</div></div>
+          <div><div class="v">99.4%</div><div class="k">정상 처리 비율</div></div>
+          <div><div class="v">3</div><div class="k">톰캣 SEVERE</div></div>
+          <div><div class="v" style="color:var(--accent)">주의</div><div class="k">전체 위험도</div></div>
+        </div>
+        <div class="finding"><span class="lv lv-crit">긴급</span><div><div class="ft">결제(cart/payment) 500 에러 반복 재현</div><div class="fd">CartDAO.chkOverlapLeccode() — 빈 IN절로 ORA-00936</div></div></div>
+        <div class="finding"><span class="lv lv-attn">주의</span><div><div class="ft">강의재생 캐스케이딩 지연</div><div class="fd">응답지연 TOP과 5xx URL 교집합 패턴</div></div></div>
+        <div class="finding"><span class="lv lv-info">참고</span><div><div class="ft">정적리소스 4xx 다수</div><div class="fd">봇 트래픽으로 분류, 실사용자 영향 없음</div></div></div>
+      </div>
+
+      <div class="fix">
+        <div class="fix-head">
+          <h3>수정안 — 장바구니가 비었을 때 오류가 나지 않도록 수정</h3>
+          <span class="conf">확신도 높음</span>
+        </div>
+        <div class="fix-body">
+          <dl>
+            <dt>원인</dt><dd>장바구니 강의코드 목록이 비어있을 때 <code>IN ( )</code>이 생성돼 ORA-00936</dd>
+            <dt>수정대상</dt><dd><code>cartSQL.xml</code> — cart.chkOverlapLeccode-Inline</dd>
+            <dt>근거</dt><dd>이전 커밋과 스택트레이스 줄번호를 대조. 재배포 누락으로 판단</dd>
+          </dl>
+<pre class="diff">&lt;where&gt;
+<span class="del">-  LECCODE IN &lt;foreach ... open="(" close=")"&gt;</span>
+<span class="add">+  &lt;if test="leccodeList != null and !leccodeList.isEmpty()"&gt;</span>
+<span class="add">+    LECCODE IN &lt;foreach ... open="(" close=")"&gt;</span>
+<span class="add">+  &lt;/if&gt;</span>
+<span class="add">+  &lt;if test="leccodeList == null or leccodeList.isEmpty()"&gt;AND 1=0&lt;/if&gt;</span>
+&lt;/where&gt;</pre>
+        </div>
+      </div>
+      <p class="note">실제 소스는 복사해둔 사본(읽기전용 미러) 안에서만 다뤄지고, 진짜 저장소(GitLab)는 건드리지 않는다. 위 수정 내용은 그 사본에서 실제로 바뀐 부분을 그대로 옮긴 것이며, AI가 그럴듯하게 지어낸 코드가 아니다.</p>
+    </section>
+
+    <!-- ============ 06:00 ============ -->
+    <section id="s4" data-phase="dawn">
+      <span class="sec-time">06:00</span>
+      <h2>실제로 잡아낸 것들</h2>
+
+      <div class="cases">
+        <article>
+          <div class="where">결제 · 버그</div>
+          <div>
+            <h3>장바구니가 비면 결제가 막히는 버그</h3>
+            <p>접속기록만으론 안 보였다. 시스템 상세기록(톰캣)까지 같이 보고 나서야 코드 몇 줄이 원인인지 정확히 짚어낼 수 있었다.</p>
+          </div>
+        </article>
+        <article>
+          <div class="where">결제 · 동시접속</div>
+          <div>
+            <h3>주문번호가 뒤섞이는 순간</h3>
+            <p>결제창에 여러 사람이 동시에 몰리면 서로 다른 주문번호가 뒤섞여 하나가 사라지는 문제를, 로그 패턴만으로 잡아냈다.</p>
+          </div>
+        </article>
+        <article>
+          <div class="where">강의재생</div>
+          <div>
+            <h3>몇 분 몇 초에 멈췄는지 찾아내는 법</h3>
+            <p>그냥 "가끔 끊긴다"가 아니라, 어떤 학생이 정확히 몇 분 몇 초에 영상이 멈췄는지까지 로그로 되짚어보는 방법을 만들었다.</p>
+          </div>
+        </article>
+        <article>
+          <div class="where">검색</div>
+          <div>
+            <h3>긴 검색어 하나가 만든 500 에러</h3>
+            <p>누군가 스팸성으로 아주 긴 검색어를 넣으면, 그걸 로그 테이블에 저장하려다 글자수 제한에 걸려 500 에러가 났다. 검색 페이지 5xx와 응답 지연 패턴을 나란히 놓고 보다가 찾아낸 상관관계였다.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ 09–18시 ============ -->
+    <section id="s5" data-phase="day">
+      <span class="sec-time">09–18시</span>
+      <h2>다듬어온 과정</h2>
+
+      <p>새벽에 사람 없이 도는 만큼, <strong>틀렸을 때가 더 위험</strong>했다. 실제로는 멀쩡한 걸 장애로 오해한 적도 있다. 챗봇 답변이 좀 느린 것뿐인데 결국 답은 왔던 경우, 파일을 다 받은 뒤 뒷정리 과정에서 생기는 사소한 오류, 관리자가 직접 이상한 값으로 조회했을 때 나는 오류 같은 것들. 이런 걸 하나씩 "진짜 장애 아님" 목록에 올리며 신뢰도를 높여왔다.</p>
+
+      <p>고치긴 했지만 급하진 않아서, 2주마다 있는 정기배포일에 맞춰 반영하려던 사소한 문제들이 있었다. 그런데 배포일을 기다리는 동안 파수꾼은 매일 "아직도 안 고쳐졌다"고 지적했다. 결국 한 번은 내가 제대로 따졌다.</p>
+
+      <div class="talk">
+        <div class="turn"><span class="who">파수꾼</span><span>동일한 문제가 해결되지 않고 세 번 연속으로 발견되었습니다.</span></div>
+        <div class="turn me"><span class="who">나</span><span>나 이거 고쳤어. 왜 자꾸 지적해. 어떻게 해줘야 이 문제가 해결되는데?</span></div>
+        <div class="turn"><span class="who">파수꾼</span><span><code>known-issues.json</code>에 넣어주시면 됩니다.</span></div>
+        <div class="turn me"><span class="who">나</span><span>이거 너무 너 편의적인데? 다시 생각해!</span></div>
+        <div class="turn"><span class="who">파수꾼</span><span>어… 그게요…</span></div>
+        <div class="turn me"><span class="who">나</span><span>우리 GitLab 쓰는데, 이슈 하나 만들어올 테니 이것도 같이 분석해서 만들면 되지 않아?</span></div>
+        <div class="turn"><span class="who">파수꾼</span><span>가능합니다. 개발 시작하겠습니다.</span></div>
+      </div>
+
+      <p>그렇게 전용 이슈(개발팀이 작업 기록을 남기는 GitLab 게시글)가 하나 생겼다. 개발팀은 거기에 뭘 언제 고쳤고 언제 배포할지를 적고, 파수꾼은 매일 새벽 그 이슈부터 먼저 확인해서 이미 처리된 건 다시 긴급으로 띄우지 않는다. 그 이슈 하나에만 최근 한 달여간 스무 건이 넘는 서로 다른 수정사항이 기록됐고, 대부분 1~2주 안에 실제 배포로 이어졌다.</p>
+
+      <div class="ba">
+        <div>
+          <h3>BEFORE</h3>
+          <div class="row">08-12 · 아직도 안 고쳤나요?</div>
+          <div class="row">08-13 · 아직도 안 고쳤나요?</div>
+          <div class="row">08-14 · 아직도 안 고쳤나요?</div>
+          <p class="verdict bad">이미 고쳤는데 정기배포 전이라, 매일 같은 지적을 받는다.</p>
+        </div>
+        <div>
+          <h3>AFTER</h3>
+          <div class="flow">
+            <b>수정이력 전용 GitLab 이슈</b><br>
+            08-10 수정완료 · 배포 대기<br>
+            ↓ 새벽마다 확인<br>
+            <b>파수꾼</b> — 처리된 건 제외
+          </div>
+          <p class="verdict ok">새 파일을 만들지 않고, 팀이 이미 쓰던 것을 그대로 읽는다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 42일치 ============ -->
+    <section id="s6" data-phase="day">
+      <span class="sec-time">42일치</span>
+      <h2>수치로 보면</h2>
+
+      <div class="figures">
+        <div><div class="v">42일</div><div class="k">2026-07-29 이후 무중단 자동실행</div></div>
+        <div><div class="v">246건</div><div class="k">누적 리포트 산출물</div></div>
+        <div><div class="v">34일</div><div class="k">긴급·주의 이슈가 실제 감지된 날</div></div>
+        <div><div class="v">10건</div><div class="k">그중 긴급 등급, 대부분 결제 관련</div></div>
+      </div>
+      <p class="note">감지 건수는 같은 이슈가 해결 전까지 여러 날 반복 집계된 수치를 포함한다. "서로 다른 버그 개수"가 아니라 "새벽마다 놓치지 않고 잡아낸 횟수"로 읽는 게 정확하다.</p>
+
+      <figure class="wide">
+        <svg viewBox="0 0 1000 190" role="img" aria-label="8월 2일부터 9월 8일까지 34일간 매일 감지된 이슈 건수 막대그래프. 위쪽 눈금 표시가 있는 날은 긴급 등급 이슈가 있었던 날">
+          <g font-family="IBM Plex Mono, monospace" font-size="12.5" fill="currentColor" opacity=".55">
+            <line x1="40" y1="30" x2="990" y2="30" stroke="currentColor" stroke-opacity=".15"/>
+            <text x="30" y="34" text-anchor="end">14</text>
+            <line x1="40" y1="80" x2="990" y2="80" stroke="currentColor" stroke-opacity=".15"/>
+            <text x="30" y="84" text-anchor="end">7</text>
+            <line x1="40" y1="130" x2="990" y2="130" stroke="currentColor" stroke-opacity=".4"/>
+            <text x="30" y="134" text-anchor="end">0</text>
+          </g>
+          <g fill="var(--accent)">
+            <rect x="41"  y="123" width="24" height="7"/>
+            <rect x="69"  y="109" width="24" height="21"/>
+            <rect x="97"  y="94"  width="24" height="36"/>
+            <rect x="125" y="94"  width="24" height="36"/>
+            <rect x="153" y="101" width="24" height="29"/>
+            <rect x="181" y="94"  width="24" height="36"/>
+            <rect x="209" y="94"  width="24" height="36"/>
+            <rect x="237" y="94"  width="24" height="36"/>
+            <rect x="265" y="80"  width="24" height="50"/>
+            <rect x="293" y="94"  width="24" height="36"/>
+            <rect x="321" y="30"  width="24" height="100"/>
+            <rect x="349" y="44"  width="24" height="86"/>
+            <rect x="377" y="94"  width="24" height="36"/>
+            <rect x="405" y="87"  width="24" height="43"/>
+            <rect x="433" y="87"  width="24" height="43"/>
+            <rect x="461" y="115" width="24" height="15"/>
+            <rect x="489" y="101" width="24" height="29"/>
+            <rect x="517" y="108" width="24" height="22"/>
+            <rect x="545" y="94"  width="24" height="36"/>
+            <rect x="573" y="80"  width="24" height="50"/>
+            <rect x="601" y="108" width="24" height="22"/>
+            <rect x="629" y="115" width="24" height="15"/>
+            <rect x="657" y="94"  width="24" height="36"/>
+            <rect x="685" y="72"  width="24" height="58"/>
+            <rect x="713" y="72"  width="24" height="58"/>
+            <rect x="741" y="94"  width="24" height="36"/>
+            <rect x="769" y="94"  width="24" height="36"/>
+            <rect x="797" y="115" width="24" height="15"/>
+            <rect x="825" y="101" width="24" height="29"/>
+            <rect x="853" y="101" width="24" height="29"/>
+            <rect x="881" y="87"  width="24" height="43"/>
+            <rect x="909" y="101" width="24" height="29"/>
+            <rect x="937" y="87"  width="24" height="43"/>
+            <rect x="965" y="94"  width="24" height="36"/>
+          </g>
+          <g stroke="var(--alarm)" stroke-width="3">
+            <line x1="41"  y1="16" x2="65"  y2="16"/>
+            <line x1="69"  y1="16" x2="93"  y2="16"/>
+            <line x1="97"  y1="16" x2="121" y2="16"/>
+            <line x1="153" y1="16" x2="177" y2="16"/>
+            <line x1="321" y1="16" x2="345" y2="16"/>
+            <line x1="377" y1="16" x2="401" y2="16"/>
+            <line x1="741" y1="16" x2="765" y2="16"/>
+            <line x1="881" y1="16" x2="905" y2="16"/>
+            <line x1="937" y1="16" x2="961" y2="16"/>
+          </g>
+          <g font-family="IBM Plex Mono,monospace" font-size="13" fill="currentColor" opacity=".55">
+            <text x="41" y="150">08-02</text>
+            <text x="321" y="150">08-12</text>
+            <text x="589" y="150">08-25</text>
+            <text x="937" y="150">09-08</text>
+          </g>
+          <text x="41" y="174" font-family="IBM Plex Sans KR, sans-serif" font-size="13" fill="var(--alarm)">위쪽 눈금 = 긴급 등급이 발생한 날</text>
+        </svg>
+      </figure>
+    </section>
+
+    <!-- ============ 다시 03:00 ============ -->
+    <section id="s7" data-phase="night">
+      <span class="sec-time">다시 03:00</span>
+      <h2>그래도, 오류는 끝이 없다</h2>
+
+      <p class="close-big">완성된 제품이 아니다. 매일 아침, 나 대신 로그를 읽어주는 동료가 하나 생겼을 뿐이다.</p>
+
+      <p>다들 이제 이걸 그냥 "파수꾼"이라고 부른다. 새로운 기능이 나오면 새로운 로그가 쌓이고, 또 새로운 오탐과 새로운 진짜 버그가 섞여 나온다. 지금도 매일 새벽 3시, 5시, 6시에 조용히 돌고 있다. 이 발표를 준비하는 새벽에도.</p>
+
+      <p class="close-last">그래도 확실히 달라진 게 하나 있다. 밤 11시, 내 휴대폰이 울리는 일이 사라졌다.</p>
+
+      <footer>
+        <span>빌더나잇 시즌 3 · 로컬앱 자랑대회 · 업무 자동화 부문</span>
+        <span class="mono">logreport</span>
+      </footer>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var sections = Array.prototype.slice.call(document.querySelectorAll('[data-phase]'));
+  var items = Array.prototype.slice.call(document.querySelectorAll('#railList li'));
+  var mrTime = document.getElementById('mrTime');
+  var mrName = document.getElementById('mrName');
+
+  function setActive(el){
+    var phase = el.getAttribute('data-phase');
+    if (root.getAttribute('data-phase') !== phase) root.setAttribute('data-phase', phase);
+
+    var id = el.id;
+    items.forEach(function(li){
+      var on = li.getAttribute('data-target') === id;
+      li.classList.toggle('on', on);
+      if (on){
+        mrTime.textContent = li.querySelector('.t').textContent;
+        mrName.textContent = li.querySelector('.n').textContent;
+      }
+    });
+    if (!id){ mrTime.textContent = '23:04'; mrName.textContent = '그날의 장면'; }
+  }
+
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) setActive(e.target);
+      });
+    }, { rootMargin:'-45% 0px -50% 0px', threshold:0 });
+    sections.forEach(function(s){ io.observe(s); });
+  }
+
+  items.forEach(function(li){
+    li.querySelector('button').addEventListener('click', function(){
+      var t = document.getElementById(li.getAttribute('data-target'));
+      if (t) t.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start' });
+    });
+  });
+})();
+</script>
+
+<!-- 티스토리 iframe 삽입 시 부모 창에 실제 높이를 알려줌 (스킨 쪽 리스너와 세트) -->
+<script>
+(function(){
+  if (window.self === window.top) return; // 독립 실행이면 불필요
+
+  var lastSent = 0;
+
+  function reportHeight(){
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    if (h === lastSent) return;
+    lastSent = h;
+    window.parent.postMessage({ type: 'autoHeightFrame', height: h }, '*');
+  }
+
+  window.addEventListener('load', reportHeight);
+  window.addEventListener('resize', reportHeight);
+
+  if ('ResizeObserver' in window){
+    new ResizeObserver(reportHeight).observe(document.documentElement);
+  } else {
+    setInterval(reportHeight, 500);
+  }
+
+  reportHeight();
+})();
+</script>
+</body></html>
