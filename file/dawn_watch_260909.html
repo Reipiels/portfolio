@@ -103,19 +103,24 @@ a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-
 .mobile-rail{ display:none; }
 
 @media (max-width:900px){
-  .frame{ grid-template-columns:1fr; padding:0 22px; gap:0; }
+  .frame{ grid-template-columns:minmax(0,1fr); padding:0 22px; gap:0; }
   .rail{ display:none; }
   .mobile-rail{
     display:flex; position:sticky; top:0; z-index:20;
     align-items:baseline; gap:10px;
     background:var(--bg); border-bottom:1px solid var(--rule);
-    padding:10px 22px; margin:0 -22px 0;
+    padding:10px 22px; margin:0;
     font-size:14px;
   }
   .mobile-rail .t{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--accent); }
   .mobile-rail .n{ color:var(--ink-2); }
   body{ font-size:17.5px; }
 }
+
+/* iframe 삽입 시: iframe 자체는 스크롤되지 않으므로 sticky/100vh 대신 부모가 보낸 스크롤값으로 위치를 계산 */
+.embedded{ --pvh:800px; }
+.embedded .rail-inner{ position:relative; height:var(--pvh); will-change:transform; }
+.embedded .mobile-rail{ position:relative; will-change:transform; }
 
 /* ---------- 히어로 ---------- */
 .hero{ padding:104px 0 20px; }
@@ -809,7 +814,10 @@ footer{
     if (!id){ mrTime.textContent = '23:04'; mrName.textContent = '그날의 장면'; }
   }
 
-  if ('IntersectionObserver' in window){
+  var embedded = window.self !== window.top;
+  if (embedded) root.classList.add('embedded');
+
+  if (!embedded && 'IntersectionObserver' in window){
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         if (e.isIntersecting) setActive(e.target);
@@ -818,10 +826,47 @@ footer{
     sections.forEach(function(s){ io.observe(s); });
   }
 
+  if (embedded){
+    var railEl = document.querySelector('.rail');
+    var railInner = document.querySelector('.rail-inner');
+    var bar = document.querySelector('.mobile-rail');
+    var lastActive = null;
+
+    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+    window.addEventListener('message', function(e){
+      var d = e.data;
+      if (e.source !== window.parent || !d || d.type !== 'autoHeightFrameScroll') return;
+
+      var vh = d.vh, top = -d.top;
+      root.style.setProperty('--pvh', vh + 'px');
+
+      var docH = document.body.offsetHeight;
+      if (getComputedStyle(bar).display !== 'none'){
+        bar.style.transform = 'translateY(' + clamp(top, 0, docH - bar.offsetHeight) + 'px)';
+      }
+      if (getComputedStyle(railEl).display !== 'none'){
+        var base = railEl.getBoundingClientRect().top;
+        railInner.style.transform = 'translateY(' + clamp(top - base, 0, Math.max(0, railEl.offsetHeight - vh)) + 'px)';
+      }
+
+      var probe = top + vh * 0.475, cur = sections[0];
+      for (var i = 0; i < sections.length; i++){
+        if (sections[i].getBoundingClientRect().top <= probe) cur = sections[i];
+      }
+      if (cur !== lastActive){ lastActive = cur; setActive(cur); }
+    });
+  }
+
   items.forEach(function(li){
     li.querySelector('button').addEventListener('click', function(){
       var t = document.getElementById(li.getAttribute('data-target'));
-      if (t) t.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start' });
+      if (!t) return;
+      if (embedded){
+        window.parent.postMessage({ type: 'autoHeightFrameScrollTo', y: t.getBoundingClientRect().top }, '*');
+        return;
+      }
+      t.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start' });
     });
   });
 })();
