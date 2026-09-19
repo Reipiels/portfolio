@@ -118,7 +118,7 @@ a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-
 }
 
 /* iframe 삽입 시: iframe 자체는 스크롤되지 않으므로 sticky/100vh 대신 부모가 보낸 스크롤값으로 위치를 계산 */
-.embedded{ --pvh:800px; }
+.embedded{ --pvh:800px; overflow:hidden; }
 .embedded .rail-inner{ position:relative; height:var(--pvh); will-change:transform; }
 .embedded .mobile-rail{ position:relative; will-change:transform; }
 
@@ -817,7 +817,8 @@ footer{
   var embedded = window.self !== window.top;
   if (embedded) root.classList.add('embedded');
 
-  if (!embedded && 'IntersectionObserver' in window){
+  function startObserver(){
+    if (!('IntersectionObserver' in window)) return;
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         if (e.isIntersecting) setActive(e.target);
@@ -825,18 +826,32 @@ footer{
     }, { rootMargin:'-45% 0px -50% 0px', threshold:0 });
     sections.forEach(function(s){ io.observe(s); });
   }
+  if (!embedded) startObserver();
 
   if (embedded){
     var railEl = document.querySelector('.rail');
     var railInner = document.querySelector('.rail-inner');
     var bar = document.querySelector('.mobile-rail');
-    var lastActive = null;
+    var lastActive = null, acked = false, fellBack = false;
 
     function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
+    // 부모(티스토리 스킨)에 리스너가 없으면(예: 모바일 템플릿) 일반 스크롤 페이지로 전환
+    setTimeout(function(){
+      if (acked) return;
+      fellBack = true;
+      root.classList.remove('embedded');
+      startObserver();
+      var a = document.createElement('a');
+      a.href = location.href; a.target = '_blank'; a.rel = 'noopener'; a.textContent = '전체 화면으로 보기 ↗';
+      a.style.cssText = 'position:fixed;top:8px;right:8px;z-index:50;padding:6px 10px;font-size:13px;background:var(--panel);color:var(--ink);border:1px solid var(--rule-strong);text-decoration:none';
+      document.body.appendChild(a);
+    }, 3000);
+
     window.addEventListener('message', function(e){
       var d = e.data;
-      if (e.source !== window.parent || !d || d.type !== 'autoHeightFrameScroll') return;
+      if (fellBack || e.source !== window.parent || !d || d.type !== 'autoHeightFrameScroll') return;
+      acked = true;
 
       var vh = d.vh, top = -d.top;
       root.style.setProperty('--pvh', vh + 'px');
