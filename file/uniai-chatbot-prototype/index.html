@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>안내챗봇 프로토타입</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/css/unilms/tokens.css?v=14">
+<link rel="stylesheet" href="assets/css/unilms/base.css?v=14">
+<link rel="stylesheet" href="assets/css/unilms/components.css?v=14">
+<link rel="stylesheet" href="assets/css/chatbot.css?v=14">
+<link rel="stylesheet" href="assets/css/demo.css?v=14">
+</head>
+<body>
+
+<!-- 호스트 페이지 흉내: 위젯은 unilms 학습자 화면에 삽입된다(CH-01). 이 부분은 실제 위젯이 아니다 -->
+<header class="host-head">
+  <span class="host-logo">유니와이즈 원격평생교육원</span>
+  <nav class="host-nav" aria-label="주메뉴(흉내)"><span>교육원소개</span><span>학위과정</span><span>수강신청</span><span>나의강의실</span><span>고객센터</span></nav>
+  <span class="host-user">프로토타입 — 호스트 페이지 흉내</span>
+</header>
+<main>
+  <section class="host-hero">
+    <h1>안내챗봇 프로토타입</h1>
+    <p>오른쪽 아래 <b>채팅 버튼</b>을 눌러 보세요. 왼쪽 시연 컨트롤로 로그인·시각·오류·화면을 바꿀 수 있어요.</p>
+  </section>
+  <section class="host-body" aria-hidden="true">
+    <div class="host-box">홈페이지 콘텐츠</div>
+    <div class="host-box">홈페이지 콘텐츠</div>
+    <div class="host-box">홈페이지 콘텐츠</div>
+    <div class="host-box">홈페이지 콘텐츠</div>
+  </section>
+  <section class="host-lecture">
+    <div class="host-lecture__video">▶ 강의 영상 (흉내)</div>
+    <div class="host-lecture__menu"><span>강의목록</span><span>학습자료</span><span>질문하기</span><span>학습도우미</span></div>
+  </section>
+</main>
+<button type="button" class="video-launcher" title="기존 영상 챗봇 자리(흉내) — 이 프로토타입 범위 밖">🎬 학습도우미</button>
+
+<div id="chatbot"></div>
+
+<script src="assets/js/cases.js?v=14"></script>
+<script src="assets/js/licenses.js?v=14"></script>
+<script src="assets/js/demo.js?v=14"></script>
+<script src="assets/js/chatbot.js?v=14"></script>
+</body>
+</html>

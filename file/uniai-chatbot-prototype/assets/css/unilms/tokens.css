@@ -1,0 +1,242 @@
+/* ==========================================================================
+   common/tokens.css — 두 계열(홈페이지·강의실)이 같이 쓰는 기초 토큰
+   - 색 팔레트·글꼴·간격·반경·그림자·레이아웃 값만 둔다.
+   - 다크모드: 강의실 계열만. <html data-color-mode="auto|light|dark"> 가 있을 때만 켜진다.
+     홈페이지 계열은 이 속성을 두지 않고 <meta name="color-scheme" content="light"> 로 밝은 화면 고정.
+   - 출처: new.uniwise.kr (PC), new.uniwise.kr/mobi (모바일) 실측 2026-10-19
+   ========================================================================== */
+:root {
+  /* ---- Brand: 역할 4개 ----------------------------------------------------
+     primary   버건디  브랜드·주요 실행·선택 상태·가격      (현행 PC 주색)
+     secondary 남색    구조(위치 띠·하단 바)·보조 실행      (현행 서브 띠)
+     accent    금색    "눈에 띄어야 할 것" 한정: HOT·무료·마감임박·고객센터 번호
+     danger    빨강    오류·실패에만. 브랜드 강조에 쓰지 않는다
+     ----------------------------------------------------------------------- */
+  --color-primary:        #7F1A21;
+  --color-primary-hover:  #67151B;
+  --color-primary-soft:   #F8EEEF;
+  --color-primary-line:   #E6D3D5;
+
+  --color-secondary:       #223757;
+  --color-secondary-hover: #1A2B45;
+  --color-secondary-soft:  #EBEFF5;
+
+  --color-accent:         #F2A900;  /* 배경(위 글자는 --text-on-accent, 대비 7.9) 또는 어두운 바탕 위 강조 글자(버건디 위 5.0) — 흰 바탕 글자로는 쓰지 않는다 */
+  --color-accent-soft:    #FDF4DC;
+
+  /* ---- Neutral ---------------------------------------------------------- */
+  --gray-900: #222222;
+  --gray-800: #333333;  /* 본문 */
+  --gray-700: #444444;
+  --gray-600: #666666;
+  --gray-500: #767676;  /* 흐린 글자 하한 (흰 배경 대비 4.5) */
+  --gray-400: #999999;  /* 아이콘·비활성 (글자에 쓰지 않음) */
+  --gray-300: #C6C6C6;
+  --gray-200: #DDDDDD;  /* 기본 선 */
+  --gray-150: #E8E8E8;
+  --gray-100: #F2F2F2;
+  --gray-50:  #F5F5F7;  /* 모바일 페이지 배경 */
+  --color-white: #FFFFFF;
+  --color-black: #000000;  /* 현행 GNB 글자 */
+
+  /* ---- Semantic (흰 배경 글자 대비 4.5 이상) ------------------------------ */
+  --color-success:      #1E8566;
+  --color-success-soft: #E6F4EE;
+  --color-warning:      #B45F06;
+  --color-warning-soft: #FDF1E3;
+  --color-danger:       #D32F2F;
+  --color-danger-soft:  #FDECEC;
+
+  /* ---- 의미 이름 (공통 요소는 이것만 쓴다. 다크모드에서 이 값만 바뀐다) ----
+     components.css 는 --gray-* 를 직접 쓰지 않는다.                          */
+  --text-strong:   var(--gray-900);
+  --text:          var(--gray-800);
+  --text-sub:      var(--gray-600);
+  --text-muted:    var(--gray-500);
+  --text-disabled: var(--gray-400);
+  --text-inverse:  var(--color-white);   /* 색 바탕(주색 버튼·배지·툴팁) 위 글자 */
+  --text-on-accent: var(--gray-900);     /* 금색 바탕 위 글자 */
+  --icon-muted:    var(--gray-500);      /* 목록 점, 펼침 화살표 */
+  --icon-faint:    var(--gray-300);      /* 빈 상태 그림 */
+
+  --surface:          var(--color-white); /* 페이지·카드·모달 바탕 */
+  --surface-alt:      var(--gray-50);     /* 옅은 구역 (검색 영역·항목 칸·안내 상자) */
+  --surface-hover:    var(--gray-100);    /* 마우스 올림 */
+  --surface-disabled: var(--gray-100);    /* 비활성 입력 */
+  --surface-track:    var(--gray-150);    /* 진도 막대 바탕, 세그먼트 바탕 */
+  --surface-inverse:  var(--gray-900);    /* 툴팁·토스트 */
+  --surface-dark:     #3A3A3A;            /* 홈페이지 푸터 (다크 무관) */
+  --overlay:          rgba(0, 0, 0, .5);  /* 모달 뒤 */
+
+  --line:          var(--gray-200);  /* 기본 선 (상자 테두리) */
+  --line-subtle:   var(--gray-150);  /* 상자 안 구분선 */
+  --line-input:    #8C8C8C;          /* 입력칸·선택 상자 테두리 — 테두리가 입력칸의 경계라 흰 바탕 3:1 이상 (WCAG 1.4.11, 10-20 사용자) */
+  --line-button:   var(--gray-300);  /* 글자가 있는 버튼·선 배지 테두리 (글자가 경계를 대신해 옅어도 됨) */
+  --line-strong:   var(--gray-800);  /* 굵은 구분 (게시글 머리, FAQ 윗선), 입력 초점 */
+
+  --color-neutral:       var(--gray-700);  /* 회색 버튼 (회원가입·검색) */
+  --color-neutral-hover: var(--gray-900);
+  --color-primary-text:   var(--color-primary);   /* 주색을 "글자"로 쓸 때 (다크에서 밝아짐) */
+  --color-secondary-text: var(--color-secondary);
+  --focus-ring:           #2563C9;   /* 키보드 초점 표시 (접근성 — 브랜드색과 구분되는 파랑) */
+  /* 색 바탕(버건디 머리·남색 띠·어두운 푸터) 위 글자·선 — 흰색 단계. 그 영역에서는 --focus-ring 도 흰색으로 바꾼다 */
+  --on-color:       #FFFFFF;
+  --on-color-sub:   rgba(255, 255, 255, .72);
+  --on-color-line:  rgba(255, 255, 255, .28);
+  --on-color-hover: rgba(255, 255, 255, .12);
+  --on-color-shade: rgba(0, 0, 0, .18);
+  /* 선택 상자(.select) 화살표 — <select> 는 ::after 를 못 써서 mask+currentColor 대신 모드별 그림을 토큰으로 둔다 */
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+  color-scheme: light;
+
+  /* ---- Typography ------------------------------------------------------- */
+  --font-base: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --fs-xs:   12px;
+  --fs-sm:   13px;
+  --fs-base: 15px;  /* 현행 PC 본문 */
+  --fs-md:   16px;
+  --fs-lg:   18px;
+  --fs-xl:   20px;
+  --fs-2xl:  24px;
+  --fs-3xl:  28px;
+  --fs-4xl:  36px;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-bold:    700;
+  --lh-tight: 1.3;
+  --lh-base:  1.6;
+  --lh-read:  1.75;  /* 긴 글 읽기 (본문 게시글·안내문) */
+
+  /* ---- Spacing (4px 단위) ----------------------------------------------- */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px; --sp-5: 20px;
+  --sp-6: 24px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px; --sp-16: 64px;
+
+  /* ---- Radius / Shadow -------------------------------------------------- */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-pill: 999px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, .08);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, .16);
+
+  /* ---- Control size ----------------------------------------------------- */
+  --ctl-h-sm: 32px;
+  --ctl-h-md: 40px;  /* 현행 검색·로그인 버튼 높이 */
+  --ctl-h-lg: 48px;
+
+  /* ---- Layout ----------------------------------------------------------- */
+  --container:     1100px;  /* 현행 .wrap */
+  --gutter:        20px;
+  --gutter-mobile: 16px;
+  --header-h-mo:   72px;  /* 현행 모바일 헤더 */
+  /* z-index: 상자 안 겹침(raised·cover) < 말풍선(tip·pop) < 붙는 바(sticky) < 화면 층(header~toast) */
+  --z-raised: 1;    /* 옆 요소 위로 한 단계 (단계 번호·GNB 배지) */
+  --z-cover:  2;    /* 상자 안을 덮는 안내 (가로 스크롤 안내) */
+  --z-tip:    20;   /* 툴팁 말풍선 */
+  --z-pop:    30;   /* 팝오버 */
+  --z-sticky: 50;   /* 붙어 있는 바 (선택 바, 모바일 LNB 탭) */
+  --z-header: 100;
+  --z-popup:  200;
+  --z-drawer: 300;
+  --z-modal:  400;
+  --z-toast:  500;
+  --transition: .2s ease;
+
+  /* ---- Breakpoint (미디어쿼리에는 변수를 못 써서 값만 기록) ---------------
+     sm ~767 모바일 / md 768~1099 태블릿 / lg 1100~ PC
+     -------------------------------------------------------------------- */
+}
+
+/* ==========================================================================
+   다크모드 값 — 강의실 계열 전용
+   data-color-mode="dark" 이거나, "auto" 이고 OS가 다크일 때. 두 블록 값은 같게 유지한다.
+   (글자 대비는 모두 4.5 이상으로 맞춤. 금색 accent 는 그대로. 안내(info)는 남색 계열을 쓰므로 따로 없다)
+   ========================================================================== */
+:root[data-color-mode="dark"] {
+  --text-strong: #F3F3F5;
+  --text: #E3E4E7;
+  --text-sub: #B7B9BE;
+  --text-muted: #8F9298;
+  --text-disabled: #5E6066;
+  --icon-muted: #8F9298;
+  --icon-faint: #4A4C52;
+  --surface: #18191C;
+  --surface-alt: #1F2024;
+  --surface-hover: #2A2B30;
+  --surface-disabled: #26272B;
+  --surface-track: #303238;
+  --surface-inverse: #3A3C42;
+  --overlay: rgba(0, 0, 0, .65);
+  --line: #34363B;
+  --line-subtle: #2A2C30;
+  --line-input: #6E717A;
+  --line-button: #4A4C52;
+  --line-strong: #C8CACF;
+  --color-neutral: #45474E;
+  --color-neutral-hover: #55585F;
+  --color-primary: #A3303B;        /* 흰 글자 대비 6.9 */
+  --color-primary-hover: #B53B46;
+  --color-primary-soft: #3A1D21;
+  --color-primary-line: #5C2A30;
+  --color-primary-text: #F0939B;   /* 어두운 바탕 글자 대비 7.8 */
+  --color-secondary: #3B5A8C;
+  --color-secondary-hover: #4A6AA0;
+  --color-secondary-soft: #1E2A3D;
+  --color-secondary-text: #9DB6E0;
+  --color-accent-soft: #3A2F12;
+  --color-success: #4CC39A;  --color-success-soft: #12342A;
+  --focus-ring: #79A8F5;
+  --color-warning: #F2A65A;  --color-warning-soft: #3A2914;
+  --color-danger: #FF7A7A;   --color-danger-soft: #3D1C1E;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, .4);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, .55);
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B7B9BE' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-color-mode="auto"] {
+    --text-strong: #F3F3F5;
+    --text: #E3E4E7;
+    --text-sub: #B7B9BE;
+    --text-muted: #8F9298;
+    --text-disabled: #5E6066;
+    --icon-muted: #8F9298;
+    --icon-faint: #4A4C52;
+    --surface: #18191C;
+    --surface-alt: #1F2024;
+    --surface-hover: #2A2B30;
+    --surface-disabled: #26272B;
+    --surface-track: #303238;
+    --surface-inverse: #3A3C42;
+    --overlay: rgba(0, 0, 0, .65);
+    --line: #34363B;
+    --line-subtle: #2A2C30;
+    --line-input: #6E717A;
+    --line-button: #4A4C52;
+    --line-strong: #C8CACF;
+    --color-neutral: #45474E;
+    --color-neutral-hover: #55585F;
+    --color-primary: #A3303B;        /* 흰 글자 대비 6.9 */
+    --color-primary-hover: #B53B46;
+    --color-primary-soft: #3A1D21;
+    --color-primary-line: #5C2A30;
+    --color-primary-text: #F0939B;   /* 어두운 바탕 글자 대비 7.8 */
+    --color-secondary: #3B5A8C;
+    --color-secondary-hover: #4A6AA0;
+    --color-secondary-soft: #1E2A3D;
+    --color-secondary-text: #9DB6E0;
+    --color-accent-soft: #3A2F12;
+    --color-success: #4CC39A;  --color-success-soft: #12342A;
+    --focus-ring: #79A8F5;
+    --color-warning: #F2A65A;  --color-warning-soft: #3A2914;
+    --color-danger: #FF7A7A;   --color-danger-soft: #3D1C1E;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, .4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, .4);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, .55);
+    --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B7B9BE' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    color-scheme: dark;
+  }
+}

@@ -1,0 +1,69 @@
+/* ==========================================================================
+   demo.css — 프로토타입 바깥(호스트 페이지 흉내 · 시연 컨트롤). 실제 위젯에는 들어가지 않는다
+   ========================================================================== */
+html, body { overflow-x: hidden; }
+body { margin: 0; background: var(--surface); color: var(--text); font-family: var(--font-base); }
+
+/* 호스트 페이지 흉내 — unilms 홈페이지 / 강의실 */
+.host-head { display: flex; align-items: center; gap: var(--sp-6); height: 72px; padding: 0 max(var(--sp-6), calc((100vw - 1200px) / 2)); border-bottom: 1px solid var(--line); background: var(--surface); }
+.host-logo { font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--color-primary-text); white-space: nowrap; }
+.host-nav { display: flex; gap: var(--sp-6); font-size: var(--fs-md); font-weight: var(--fw-medium); color: var(--text-strong); }
+.host-user { margin-left: auto; font-size: var(--fs-sm); color: var(--text-sub); white-space: nowrap; }
+.host-hero { padding: var(--sp-16) max(var(--sp-6), calc((100vw - 1200px) / 2)); background: linear-gradient(120deg, var(--color-primary-soft), var(--color-secondary-soft)); }
+.host-hero h1 { margin: 0 0 var(--sp-2); font-size: var(--fs-4xl); color: var(--text-strong); line-height: 1.25; }
+.host-hero p { margin: 0; font-size: var(--fs-lg); color: var(--text-sub); }
+.host-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--sp-4); padding: var(--sp-10) max(var(--sp-6), calc((100vw - 1200px) / 2)) 160px; }
+.host-box { height: 140px; border-radius: var(--radius-lg); background: var(--surface-alt); border: 1px dashed var(--line); display: grid; place-items: center; color: var(--text-muted); font-size: var(--fs-sm); }
+
+/* 강의(영상) 화면 흉내 — 런처 공존 시연 */
+.host-lecture { display: none; padding: var(--sp-8) max(var(--sp-6), calc((100vw - 1200px) / 2)) 160px; }
+.host-lecture__video { aspect-ratio: 16 / 9; max-height: 60vh; border-radius: var(--radius-lg); background: #111; display: grid; place-items: center; color: #bbb; font-size: var(--fs-lg); }
+.host-lecture__menu { display: flex; gap: var(--sp-3); margin-top: var(--sp-3); font-size: var(--fs-sm); color: var(--text-sub); }
+.is-lecture .host-hero, .is-lecture .host-body { display: none; }
+.is-lecture .host-lecture { display: block; }
+.video-launcher { position: fixed; right: 24px; bottom: 24px; z-index: var(--z-popup); display: none; align-items: center; gap: var(--sp-2); height: 52px; padding: 0 var(--sp-5); border: 0; border-radius: var(--radius-pill); background: var(--color-secondary); color: var(--text-inverse); font-size: var(--fs-md); font-weight: var(--fw-bold); box-shadow: var(--shadow-lg); }
+.is-lecture .video-launcher { display: inline-flex; }
+
+/* 시연 컨트롤 */
+.demo { position: fixed; left: 16px; top: 88px; z-index: 150; width: 300px; max-height: calc(100vh - 104px); display: flex; flex-direction: column; border: 2px solid var(--color-accent); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-lg); font-size: var(--fs-sm); }
+.demo.is-collapsed { width: auto; }
+.demo.is-collapsed .demo__body { display: none; }
+.demo__head { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3); background: var(--color-accent-soft); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+.demo__head strong { flex: 1; font-size: var(--fs-sm); color: var(--text-strong); }
+.demo__body { overflow-y: auto; padding: var(--sp-3); }
+.demo__group { margin-bottom: var(--sp-4); }
+.demo__group h3 { margin: 0 0 6px; font-size: 12px; color: var(--text-muted); font-weight: var(--fw-bold); }
+.demo__row { display: flex; flex-wrap: wrap; gap: 4px; }
+.demo__btn { height: 30px; padding: 0 10px; border: 1px solid var(--line-button); border-radius: var(--radius-sm); background: var(--surface); font-size: 12px; color: var(--text); cursor: pointer; }
+.demo__btn:hover { background: var(--surface-hover); }
+.demo__btn.is-on { border-color: var(--color-primary); background: var(--color-primary); color: var(--text-inverse); }
+.demo__btn--wide { width: 100%; text-align: left; }
+.demo__note { margin: 4px 0 0; font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+.demo__search { width: 100%; height: 32px; margin-bottom: 6px; padding: 0 var(--sp-2); border: 1px solid var(--line-input); border-radius: var(--radius-sm); font-size: 12px; }
+.demo__cases { max-height: 260px; overflow-y: auto; border: 1px solid var(--line-subtle); border-radius: var(--radius-sm); }
+.demo__cases button { display: flex; gap: 6px; width: 100%; padding: 6px var(--sp-2); border: 0; border-bottom: 1px solid var(--line-subtle); background: transparent; text-align: left; font-size: 12px; cursor: pointer; }
+.demo__cases button:hover { background: var(--color-primary-soft); }
+.demo__cases code { flex: none; color: var(--text-muted); font-size: 11px; }
+.demo__cases .is-login { flex: none; margin-left: auto; color: var(--color-warning); font-size: 11px; }
+.demo__cases { max-height: 420px; }
+.demo__count { flex: none; margin-left: auto; padding: 0 6px; border-radius: var(--radius-pill); background: var(--surface-alt); color: var(--text-muted); font-size: 10px; line-height: 18px; }
+.demo__cases .is-login + .demo__count { margin-left: 4px; }
+.demo__fold { border-bottom: 1px solid var(--line-subtle); background: var(--surface-alt); }
+.demo__fold > summary { display: flex; gap: 6px; padding: 4px var(--sp-2) 4px 18px; font-size: 11px; color: var(--text-sub); cursor: pointer; }
+.demo__fold .demo__fold > summary { padding-left: 26px; }
+.demo__cases .demo__q { padding-left: 18px; background: var(--surface); font-size: 11px; line-height: 1.45; }
+.demo__src { flex: none; height: 16px; padding: 0 4px; border-radius: 3px; font-size: 10px; line-height: 16px; }
+.demo__src--call { background: var(--color-secondary-soft); color: var(--color-secondary-text); }
+.demo__src--chat { background: var(--color-primary-soft); color: var(--color-primary-text); }
+.demo__sep { padding: 6px var(--sp-2) 2px; font-size: 11px; font-weight: var(--fw-bold); color: var(--text-strong); border-bottom: 1px solid var(--line-subtle); }
+
+@media (max-width: 767px) {
+  .host-head { gap: var(--sp-3); height: 56px; padding: 0 var(--sp-4); }
+  .host-nav, .host-user { display: none; }
+  .host-hero { padding: var(--sp-10) var(--sp-4); }
+  .host-hero h1 { font-size: var(--fs-2xl); }
+  .host-body, .host-lecture { padding: var(--sp-6) var(--sp-4) 120px; }
+  .video-launcher { right: 16px; bottom: 16px; }
+  .demo { left: 8px; top: 64px; width: calc(100vw - 16px); max-height: 70vh; }
+  .demo.is-collapsed { width: auto; }
+}
