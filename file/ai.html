@@ -263,7 +263,7 @@
 <div class="page">
 
   <div class="doc-meta">
-    <span>작성기준일 2026-11-06</span>
+    <span>작성기준일 2026-11-09</span>
   </div>
   <h1 class="doc-title">업무수행이력 및 AI 활용역량 기술서</h1>
   <p class="doc-sub">AI 협업 기반 개발 업무 수행 이력 · 사내 AI 거버넌스 수립 실적 · 주요 문제해결 사례</p>
@@ -271,7 +271,7 @@
   <hr class="thick">
 
   <table class="summary">
-    <tr><th>수행 업무</th><td>20건 이상 (서버 인프라 구축, 웹 서비스 개발, 업무 자동화, AI 서비스 구현 전 영역)</td></tr>
+    <tr><th>수행 업무</th><td>30건 이상 (서버 인프라 구축, 웹 서비스 개발, 업무 자동화, AI 서비스 구현 전 영역)</td></tr>
     <tr><th>표준 템플릿 확장</th><td>사내 표준 템플릿(기본솔루션) 1종 설계 → 파생 시스템 5종 구현</td></tr>
     <tr><th>AI 거버넌스 수립</th><td>문서 4종 직접 저작 (IT팀 업무정의 · 전사 활용 가이드라인 · 모델 선택기준 · Claude Code 운영지침)</td></tr>
     <tr><th>누적 커밋</th><td>1,235건 (커밋 수를 기재한 프로젝트 13건 합산 기준)</td></tr>
@@ -531,13 +531,13 @@
   <div class="prj">
     <h3 class="prj-title"><span class="no">3.11</span>유니와이즈 모바일웹 재구현</h3>
     <div class="scrollx"><table class="record">
-      <tr><th>수행 기간</th><td class="date-cell">2026-06-24 ~ 2026-07-23</td></tr>
+      <tr><th>수행 기간</th><td class="date-cell">2026-06-24 ~ 2026-07-23(실제구현 : 5일)</td></tr>
       <tr><th>참고 주소</th><td><a href="https://www.uniwise.co.kr/uniwiseWeb/mobile/main.html" target="_blank" rel="noopener">https://www.uniwise.co.kr/(모바일기기전용)</a></td></tr>
       <tr><th>프로젝트 소개</th><td>대표 서비스 모바일웹 전면 재구현 (결제모듈 교체 포함)</td></tr>
       <tr><th>착수 배경</th><td>디자인 개편 및 결제모듈 교체 필요</td></tr>
       <tr><th>투입 포지션</th><td>실행계획 수립 · 구현범위 정의 · 구현 (디자인/HTML은 타부서 요청)</td></tr>
       <tr><th>개발 환경</th><td>JSP · 결제모듈(PG) 연동</td></tr>
-      <tr><th>현재 상황</th><td>운영개발자 이관 - 테스트/검증중</td></tr>
+      <tr><th>현재 상황</th><td>2026-08-04 운영개발자 이관 완료(브랜치 머지)</td></tr>
     </table></div>
   </div>
 
@@ -749,7 +749,7 @@
       <tr><th>착수 배경</th><td>가족 단위 나들이 장소 선정 시 블로그·유튜브를 수기 검색해야 하는 불편을 데이터 품질로 해소하고자 개인 기획</td></tr>
       <tr><th>투입 포지션</th><td>1인 수행 (PM · 기획 · 개발 · 운영, AI 협업 구조를 아키텍처 문서에 명시)</td></tr>
       <tr><th>개발 환경</th><td>FastAPI(Python 3.11) · PostgreSQL 17 · Nginx · Gemini · HTMX · Bootstrap 5</td></tr>
-      <tr><th>현재 상황</th><td>장소 173건 추천점수 산출, 원문 데이터 2만여 건 수집, DB 테이블 27개 규모로 운영 중</td></tr>
+      <tr><th>현재 상황</th><td>장소 173건 추천점수 산출, 원문 데이터 2만여 건 수집, DB 테이블 27개 규모로 운영 -> 운영이슈로 중단 (대표 썸네일 이미지 제작 부하)</td></tr>
     </table></div>
   </div>
 
@@ -786,12 +786,25 @@
   </div>
 
   <div class="prj">
-    <h3 class="prj-title"><span class="no">4.3</span>누미나(Numina, 코드명 mathgod) — 광고 없는 아이용 연산 연습 웹앱<span class="commits">46 commits</span></h3>
+    <h3 class="prj-title"><span class="no">4.3</span>심지(心地) — 사주 계산과 LLM 해석을 결합한 운세 서비스</h3>
+    <div class="scrollx"><table class="record">
+      <tr><th>수행 기간</th><td class="date-cell">2026-09-10 ~ 2026-09-17 (개발)</td></tr>
+      <tr><th>참고 주소</th><td><a href="https://saju.yggz.xyz" target="_blank" rel="noopener">https://saju.yggz.xyz</a></td></tr>
+      <tr><th>프로젝트 소개</th><td>생년월일시로 사주 원국을 계산하고, 그 결과를 LLM이 쉬운 말로 풀어주는 운세 서비스. 무료 요약과 로그인 후 결과지별 LLM 되묻기·이력 기반 개인화를 제공</td></tr>
+      <tr><th>착수 배경</th><td>YGGZ(4.1) 다음으로 계산 엔진·LLM 해석·캐시 설계를 다뤄보려 기획. "무료 만세력+ChatGPT"와 차별화할 수 있는지 먼저 검토하고 착수</td></tr>
+      <tr><th>투입 포지션</th><td>1인 기획·운영 + AI 다중 세션 협업 (엔진, 풀스택, 인프라를 역할별로 나눠 진행)</td></tr>
+      <tr><th>개발 환경</th><td>Python 3.11 · FastAPI · PostgreSQL · SQLAlchemy/Alembic · Gemini API · Google OAuth</td></tr>
+      <tr><th>현재 상황</th><td>운영 중. 계산 결과는 93만 항목 외부 대조 일치, 절기 2,532건 천문 성표 대조로 검증했고 자체 테스트 1,938건을 통과한다. 다만 "정확도로 팔지 않는다"는 원칙 아래 해석을 보수적으로 쓰다 보니 실사용 피드백에서 "설명이 아니라 나열"이라는 지적을 받음. 이에 항목별 전용 프롬프트로 공통 흐름·구체적 장면을 짚도록 다시 설계했으나 구체화가 충분히 체감되지 않아, 무료 상태에서도 지속 사용 동기가 있는지를 먼저 풀어야 한다고 보고 중단</td></tr>
+    </table></div>
+  </div>
+
+  <div class="prj">
+    <h3 class="prj-title"><span class="no">4.4</span>누미나 - 광고 없는 아이용 연산 연습 웹앱<span class="commits">46 commits</span></h3>
     <div class="scrollx"><table class="record">
       <tr><th>수행 기간</th><td class="date-cell">2026-11-01 ~ 2026-11-03(운영중)</td></tr>
       <tr><th>참고 주소</th><td><a href="https://math.yggz.xyz" target="_blank" rel="noopener">https://math.yggz.xyz</a></td></tr>
       <tr><th>프로젝트 소개</th><td>7~10세 아이가 별빛 신전 9층을 올라가며 덧셈·뺄셈·곱셈·나눗셈·사칙연산을 수련하는 오프라인 우선 PWA. 53단계 문제 생성기, 실수 유형 분류, 진행 규칙(별·층·수호자·실력 테스트), 친구 초대(QR)·그룹 랭킹 포함. 문제 생성·채점·진행 판정은 모두 기기 안에서 수행하고 기록은 IndexedDB에 먼저 저장해 인터넷이 될 때 업로드하는 구조</td></tr>
-      <tr><th>착수 배경</th><td>자녀가 심심할 때 게임처럼 할 수 있는 연산 연습 앱이 필요했고, 또래 10명 미만(가족·친구)이 쓰는 비공개 규모. 광고·분석 SDK·외부 CDN·외부 글꼴을 배제하여 아이 기기 정보가 밖으로 나가지 않게 함. 자가 서버를 Cloudflare Tunnel로 공개해 첫 로딩이 느리므로 오프라인 우선을 필수 전제로 설계</td></tr>
+      <tr><th>착수 배경</th><td>자녀가 심심할 때 게임처럼 할 수 있는 연산 연습 앱이 필요했고, 광고·분석 SDK·외부 CDN·외부 글꼴을 배제하여 아이 기기 정보가 밖으로 나가지 않게 함. LTE/5G 인터넷 요금에 민감한 아이를 위해 오프라인 우선을 필수 전제로 설계</td></tr>
       <tr><th>투입 포지션</th><td>1인 수행 (기획 · 설계 · 개발 · 배포 · 운영, AI 협업). 정의서 확정 후 구현하는 방식으로, 결정 변경은 본문 수정 대신 정정·ADR로 누적</td></tr>
       <tr><th>개발 환경</th><td>Svelte 5 · TypeScript · Vite · PWA(서비스워커/IndexedDB) / FastAPI(Python 3.11) · PostgreSQL 17 · Nginx </td></tr>
       <tr><th>현재 상황</th><td>운영 중. 스토어출시 검토중</td></tr>
@@ -799,7 +812,7 @@
   </div>
 
   <div class="prj">
-    <h3 class="prj-title"><span class="no">4.4</span>가계부 — 가족 지출 자동 수집·분류 가계부</h3>
+    <h3 class="prj-title"><span class="no">4.5</span>가계부 — 가족 지출 자동 수집·분류 가계부</h3>
     <div class="scrollx"><table class="record">
       <tr><th>수행 기간</th><td class="date-cell">2026-11-02 ~ 2026-11-03 (운영중)</td></tr>
       <tr><th>참고 주소</th><td>wallet.yggz.xyz (가족 전용, 로그인 필요)</td></tr>
